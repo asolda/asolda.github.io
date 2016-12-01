@@ -262,6 +262,42 @@ To make a draft public, you can either run this command&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;step-7-generate-website&#34;&gt;Step 7: Generate website&lt;/h2&gt;
+
+&lt;p&gt;To generate Hugo website source you can use to deploy your website on GitHub pages,
+first edit &lt;code&gt;blog/config.toml&lt;/code&gt;, changing the baseurl line to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;baseurl = &amp;quot;https://username.github.io/&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The type&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo --theme=hugo-theme-bleak
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After this command, a &lt;code&gt;public&lt;/code&gt; folder will be created, containing teh generated source.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-8-go-public&#34;&gt;Step 8: Go public&lt;/h2&gt;
+
+&lt;p&gt;On the github side of the thing, create a new &lt;strong&gt;empty&lt;/strong&gt; (no README) repo named &lt;code&gt;username.github.io&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now move to the &lt;code&gt;public&lt;/code&gt; directory and add version control.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git init
+git remote add origin https://github.com/username/username.github.io.git
+git add --all
+git commit -m &amp;quot;First commit&amp;quot;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Visit &lt;strong&gt;&lt;a href=&#34;https://username.github.io/&#34;&gt;https://username.github.io/&lt;/a&gt;&lt;/strong&gt; and enjoy your blog, now available online.&lt;/p&gt;
+
+&lt;p&gt;Anytime, you can regenerate the site with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo --theme=hugo_theme_robust
+git add --all
+git commit -m &amp;quot;&amp;lt;some change message&amp;gt;&amp;quot;
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

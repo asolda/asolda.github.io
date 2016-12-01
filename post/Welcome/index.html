@@ -57,7 +57,7 @@
         },
         "datePublished": "2016-12-01",
         "description": "",
-        "wordCount":  1623 
+        "wordCount":  1746 
     }
 
     </script>
@@ -103,7 +103,7 @@
 
   			<header class="post-header">
   				<span class="post-meta">
-						<span class="post-date">1 Dec 2016</span> <span class="reading-time">| <span class="estimated-reading-time">8 min.</span> (<span class="word-count">1623</span> words)</span></span>
+						<span class="post-date">1 Dec 2016</span> <span class="reading-time">| <span class="estimated-reading-time">9 min.</span> (<span class="word-count">1746</span> words)</span></span>
   				</span>
   				<div class="clear"></div>
   				<h1 class="post-title">How hugo turned me into a blogger wannabe</h1>
@@ -358,6 +358,42 @@ To make a draft public, you can either run this command</p>
 
 <h2 id="step-7-generate-website">Step 7: Generate website</h2>
 
+<p>To generate Hugo website source you can use to deploy your website on GitHub pages,
+first edit <code>blog/config.toml</code>, changing the baseurl line to:</p>
+
+<pre><code>baseurl = &quot;https://username.github.io/&quot;
+</code></pre>
+
+<p>The type</p>
+
+<pre><code>hugo --theme=hugo-theme-bleak
+</code></pre>
+
+<p>After this command, a <code>public</code> folder will be created, containing teh generated source.</p>
+
+<h2 id="step-8-go-public">Step 8: Go public</h2>
+
+<p>On the github side of the thing, create a new <strong>empty</strong> (no README) repo named <code>username.github.io</code>.</p>
+
+<p>Now move to the <code>public</code> directory and add version control.</p>
+
+<pre><code>git init
+git remote add origin https://github.com/username/username.github.io.git
+git add --all
+git commit -m &quot;First commit&quot;
+git push origin master
+</code></pre>
+
+<p>Visit <strong><a href="https://username.github.io/">https://username.github.io/</a></strong> and enjoy your blog, now available online.</p>
+
+<p>Anytime, you can regenerate the site with:</p>
+
+<pre><code>hugo --theme=hugo_theme_robust
+git add --all
+git commit -m &quot;&lt;some change message&gt;&quot;
+git push origin master
+</code></pre>
+
   			</section>
 
   			<footer class="post-footer">
@@ -434,6 +470,7 @@ To make a draft public, you can either run this command</p>
 </ul></li>
 <li><a href="#step-6-make-post-public">Step 6: Make post public</a></li>
 <li><a href="#step-7-generate-website">Step 7: Generate website</a></li>
+<li><a href="#step-8-go-public">Step 8: Go public</a></li>
 </ul></li>
 </ul>
 </nav>
