@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Post-rsses on Tha Andrea Soldà Project</title>
+    <link>https://asolda.github.io/post/index.xml</link>
+    <description>Recent content in Post-rsses on Tha Andrea Soldà Project</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 01 Dec 2016 15:13:03 +0100</lastBuildDate>
+    <atom:link href="https://asolda.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>How hugo turned me into a blogger wannabe</title>
+      <link>https://asolda.github.io/post/Welcome/</link>
+      <pubDate>Thu, 01 Dec 2016 15:13:03 +0100</pubDate>
+      
+      <guid>https://asolda.github.io/post/Welcome/</guid>
+      <description>
+
+&lt;h1 id=&#34;what-is-this&#34;&gt;What is this?&lt;/h1&gt;
+
+&lt;p&gt;I have decided to finally start a blog. This is just a welcome message (mostly realized to test hugo, Github Pages and a few themes).
+In this blog I will talk about the project I work on in my free time; topics range from machine/deep learning to social network analysis, distributed computing and more.
+Some projects are my own ideas, others are the result of me playing with coll stuff you find around the web.
+This first article is about the technical details behind the blog itself, what technologies I&amp;rsquo;m using, how I&amp;rsquo;ve set up my workflow and how hugo convinced me to start this.&lt;/p&gt;
+
+&lt;h1 id=&#34;about-this-article&#34;&gt;About this article&lt;/h1&gt;
+
+&lt;p&gt;This is supposed to be a technical blog, a safe shelter for computer scientists and alikes.
+How I am developing this blog can be interesting and usefull for other people who want to share their projects and their knowledge.
+The idea here is to give you an overview of how I am developing and updating the blog from a technical perspective.&lt;/p&gt;
+
+&lt;h2 id=&#34;resources&#34;&gt;Resources&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;, alongside &lt;a href=&#34;https://pages.github.com/&#34;&gt;Github Pages&lt;/a&gt;, are the main reasons why I have finally decided to start this project.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Hugo&lt;/strong&gt; is &amp;ldquo;&lt;em&gt;a fast and modern static website engine&lt;/em&gt;&amp;rdquo;. That is, a &lt;strong&gt;HUGE&lt;/strong&gt; help when you want to just write your thoughs, without worrying about themes, styles, and general web-development-related issues.
+It is easy to install and configure (short tutorial is down the road), light, fast (gotta love &lt;a href=&#34;https://golang.org/&#34;&gt;go&lt;/a&gt;, open source&amp;hellip; I could go on for miles.
+There are downsides and negative aspects too, but the moment you realize what hugo is meant for you also realize that negative aspects turn into features; you will realize this in a few weeks of usage.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Github Pages&lt;/strong&gt; allows you to create and publish websites for your projects, as well as personal blogs or portfolios.
+The code for you site is hosted directly from your GitHub repository. Just edit, push, and your changes are live.&lt;/p&gt;
+
+&lt;p&gt;The way hugo and Github Pages interact is mesmerizing; this instruments team up for a produtictivity boost comparable to the introductions of rounded wheels over squared ones.
+Damn, you gotta love this things; and to bring you on board with me, let&amp;rsquo;s dive into a tutorial on how to setup this workflow.&lt;/p&gt;
+
+&lt;p&gt;Please note that I will assume that you already use git. In case you don&amp;rsquo;t, &lt;a href=&#34;https://git-scm.com/book/en/v2/Getting-Started-Installing-Git&#34;&gt;here you are&lt;/a&gt; (and you&amp;rsquo;re a bad person).&lt;/p&gt;
+
+&lt;h1 id=&#34;let-s-start-the-party&#34;&gt;Let&amp;rsquo;s start the party&lt;/h1&gt;
+
+&lt;h2 id=&#34;step-0-install-and-configure-hugo&#34;&gt;Step 0: Install and configure hugo&lt;/h2&gt;
+
+&lt;p&gt;You only need to follow this steps the first time you use hugo. Since it is written in go, it supports multiple platforms and comes in pre-built binaries available &lt;a href=&#34;https://github.com/spf13/hugo/releases&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;A complete installation guide is available &lt;a href=&#34;https://gohugo.io/overview/installing/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re on a Mac, I advice you install &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; and just &lt;code&gt;brew install hugo&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;before-you-start&#34;&gt;Before you start&lt;/h3&gt;
+
+&lt;p&gt;If you heven&amp;rsquo;t already done that, check that hugo is correctly configured by running&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo help
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should see something like&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo is the main command, used to build your Hugo site.
+
+Hugo is a Fast and Flexible Static Site Generator
+built with love by spf13 and friends in Go.
+
+Complete documentation is available at http://gohugo.io/.
+
+Usage:
+  hugo [flags]
+  hugo [command]
+  ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It goes on for a while.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-1-create-your-first-hugo-project&#34;&gt;Step 1: Create your first hugo project&lt;/h2&gt;
+
+&lt;p&gt;In this short example we will create a blog.&lt;/p&gt;
+
+&lt;p&gt;Hugo has a large set of commands to manage your website. To create a new website move to a convenient location and run&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo new site blog
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Change directory to &lt;code&gt;blog&lt;/code&gt; and you will see that hugo has created directories to store all the files required for your website.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;drwxr-xr-x  2 user   68 Nov 30 23:58 archetypes
+-rw-r--r--  1 user   97 Dec  1 00:22 config.toml
+drwxr-xr-x  3 user  102 Nov 30 23:59 content
+drwxr-xr-x  2 user   68 Nov 30 23:58 data
+drwxr-xr-x  2 user   68 Nov 30 23:58 layouts
+drwxr-xr-x  2 user   68 Nov 30 23:58 static
+drwxr-xr-x  6 user  204 Dec  1 00:20 themes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The directory has 6 sub-directories and 1 file. Let&amp;rsquo;s look at each one of them:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;archetypes: You can create new content files in hugo using the &lt;code&gt;hugo new&lt;/code&gt; command.
+When you run that command, it adds few configuration properties to the post like date and title.
+Archetype allows you to define your own configuration properties that will be added to the post front matter whenever &lt;code&gt;hugo new&lt;/code&gt; command is used.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;config.toml: Every website should have a configuration file at the root.
+By default, the configuration file uses &lt;code&gt;TOML&lt;/code&gt; format but you can also use &lt;code&gt;YAML&lt;/code&gt; or &lt;code&gt;JSON&lt;/code&gt; formats as well.
+&lt;code&gt;TOML&lt;/code&gt; is minimal configuration file format that’s easy to read due to obvious semantics.
+The configuration settings mentioned in the &lt;code&gt;config.toml&lt;/code&gt; are applied to the full site.
+These configuration settings include &lt;code&gt;baseurl&lt;/code&gt; and &lt;code&gt;title&lt;/code&gt; of the website.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;content: This is where you will store content of the website.
+Inside &lt;code&gt;content&lt;/code&gt;, you will create sub-directories for different sections.
+Let’s suppose your website has three actions – blog, article, and tutorial then you will have three different directories for each of them inside the content directory.
+The name of the section i.e. blog, article, or tutorial will be used by Hugo to apply a specific layout applicable to that section.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;data: This directory is used to store configuration files that can be used by Hugo when generating your website.
+You can write these files in &lt;code&gt;YAML&lt;/code&gt;, &lt;code&gt;JSON&lt;/code&gt;, or &lt;code&gt;TOML&lt;/code&gt; format.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;layouts: The content inside this directory is used to specify how your content will be converted into the static website.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;static: This directory is used to store all the static content that your website will need like images, CSS, JavaScript or other static content.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;step-2-create-contents&#34;&gt;Step 2: Create contents&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s add a new post to our &lt;code&gt;blog&lt;/code&gt;. We will use the &lt;code&gt;hugo new&lt;/code&gt; command to create a new post.
+In our example, we wat to create a welcome post to greet users visiting our blog.
+Make sure you are inside the &lt;code&gt;blog&lt;/code&gt; directory and type&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo new post/welcome
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will create a new directory &lt;code&gt;post&lt;/code&gt; inside the &lt;code&gt;content&lt;/code&gt; directory, and a new file named &lt;code&gt;welcome.md&lt;/code&gt; inside it.&lt;/p&gt;
+
+&lt;p&gt;The content of &lt;code&gt;welcome.md&lt;/code&gt; will look like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+++
+draft = true
+title = &amp;quot;welcome&amp;quot;
+date = &amp;quot;2016-12-01T00:22:59+01:00&amp;quot;
+
++++
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The content inside &lt;code&gt;+++&lt;/code&gt; is the TOML configuration for the post.
+This configuration is called &lt;strong&gt;front matter&lt;/strong&gt;.
+It enables you to define post configuration along with its content.
+By default, each post will have the three configuration properties shown above.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s add a short welcome message:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+++
+draft = true
+title = &amp;quot;welcome&amp;quot;
+date = &amp;quot;2016-12-01T00:22:59+01:00&amp;quot;
+
++++
+
+Welcome to my blog!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;step-3-serve-content&#34;&gt;Step 3: Serve content&lt;/h2&gt;
+
+&lt;p&gt;Hugo has an inbuilt server that can serve your website content so that you can preview it.
+You can also use the inbuilt Hugo server in production.
+Place yourself in the &lt;code&gt;blog&lt;/code&gt; directory and run&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo server
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The output will read&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;0 of 1 draft rendered
+0 future content
+0 pages created
+0 paginator pages created
+0 tags created
+0 categories created
+in 9 ms
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can view your blog at &lt;a href=&#34;http://localhost:1313&#34;&gt;http://localhost:1313&lt;/a&gt;, go check it out&amp;hellip; it&amp;rsquo;s a blank page.
+That&amp;rsquo;s because:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;As you can see in the &lt;code&gt;hugo server&lt;/code&gt; command output, Hugo didn’t render the draft.
+Hugo will only render drafts if you pass the &lt;code&gt;buildDrafts&lt;/code&gt; flag to the hugo server command.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;We have to specify a theme that Hugo can use to render the content.
+We will do that in the next step.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;To render drafts, run &lt;code&gt;hugo server --buildDrafts&lt;/code&gt; and head back to &lt;a href=&#34;http://localhost:1313&#34;&gt;http://localhost:1313&lt;/a&gt;.
+Yet another wonderful blank page. We are missing the theme, remember that?&lt;/p&gt;
+
+&lt;h2 id=&#34;step-4-add-theme&#34;&gt;Step 4: Add theme&lt;/h2&gt;
+
+&lt;p&gt;Themes provide the layout and templates that will be used by Hugo to render your website.
+There are a lot of open-source themes available &lt;a href=&#34;https://themes.gohugo.io/&#34;&gt;here&lt;/a&gt; that you can use.&lt;/p&gt;
+
+&lt;p&gt;In order to add a theme move to the &lt;code&gt;themes&lt;/code&gt; directory inside the root of your website and clone a theme for your website.
+For our example, we will use the &lt;code&gt;bleak&lt;/code&gt; theme (the same I am using for my blog).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Inside the themes directory&lt;/strong&gt; run &lt;code&gt;git clone https://github.com/Zenithar/hugo-theme-bleak.git&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Get back to the &lt;code&gt;blog&lt;/code&gt; directory (&lt;code&gt;cd ..&lt;/code&gt;) and run &lt;code&gt;hugo server --theme=hugo-theme-bleak --buildDrafts&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Go to &lt;a href=&#34;http://localhost:1313&#34;&gt;http://localhost:1313&lt;/a&gt; and enjoy your freshly crafted blog.&lt;/p&gt;
+
+&lt;p&gt;Now let&amp;rsquo;s get back to code and try to understand how themes work, in orde to customize and modify them.
+A theme consist of the following:
+- &lt;strong&gt;theme.toml&lt;/strong&gt; is the theme configuration file that gives information about the theme like name and description of theme, author details, and theme license.
+- &lt;strong&gt;images&lt;/strong&gt; directory contains four images, &lt;code&gt;screenshot.png&lt;/code&gt;, &lt;code&gt;tn.png&lt;/code&gt;, &lt;code&gt;full_blog.png&lt;/code&gt; and &lt;code&gt;full_post.png&lt;/code&gt;.
+These images are examples of what the theme looks like;
+as an example &lt;code&gt;screenshot.png&lt;/code&gt; is the image of the list view and &lt;code&gt;tn.png&lt;/code&gt; is the single post view.
+- &lt;strong&gt;layouts&lt;/strong&gt; directory contains different views for different content types.
+Every content type should have two files &lt;code&gt;single.html&lt;/code&gt; and &lt;code&gt;list.html&lt;/code&gt;.
+&lt;code&gt;single.html&lt;/code&gt; is used for rendering a single piece of content.
+&lt;code&gt;list.html&lt;/code&gt; is used to view a list of content items.
+- &lt;strong&gt;static&lt;/strong&gt; directory stores all the static assets used by the template.&lt;/p&gt;
+
+&lt;p&gt;Obviously you clone multiple themes and test theme using the &lt;code&gt;--theme&lt;/code&gt; argument.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-5-update-config-file&#34;&gt;Step 5: Update config file&lt;/h2&gt;
+
+&lt;p&gt;The website uses the dummy values specified in &lt;code&gt;blog/config.toml&lt;/code&gt;.
+Let’s update the configuration.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;baseurl = &amp;quot;https://mywebsite.com&amp;quot;
+title = &amp;quot;My blog&amp;quot;
+languageCode = &amp;quot;en-us&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;optional-add-comments&#34;&gt;Optional: Add comments&lt;/h3&gt;
+
+&lt;p&gt;To integrate comments in your blog you can use &lt;strong&gt;Disqus&lt;/strong&gt;. Just open the &lt;code&gt;blog/config.toml&lt;/code&gt; file and add&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[Params]
+  disqusShortname = &amp;lt;your disqus shortname&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, commenting will be enabled in your blog.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-6-make-post-public&#34;&gt;Step 6: Make post public&lt;/h2&gt;
+
+&lt;p&gt;Our welcome post is still in &lt;code&gt;draft&lt;/code&gt; status.
+To make a draft public, you can either run this command&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo undraft content/post/welcome.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or manually change the draft status in the post to &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now you can start the server without the &lt;code&gt;buildDrafts&lt;/code&gt; argument.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hugo server --theme=hugo-theme-bleak
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;step-7-generate-website&#34;&gt;Step 7: Generate website&lt;/h2&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
