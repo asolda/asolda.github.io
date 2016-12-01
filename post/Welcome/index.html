@@ -57,7 +57,7 @@
         },
         "datePublished": "2016-12-01",
         "description": "",
-        "wordCount":  1746 
+        "wordCount":  1745 
     }
 
     </script>
@@ -103,7 +103,7 @@
 
   			<header class="post-header">
   				<span class="post-meta">
-						<span class="post-date">1 Dec 2016</span> <span class="reading-time">| <span class="estimated-reading-time">9 min.</span> (<span class="word-count">1746</span> words)</span></span>
+						<span class="post-date">1 Dec 2016</span> <span class="reading-time">| <span class="estimated-reading-time">9 min.</span> (<span class="word-count">1745</span> words)</span></span>
   				</span>
   				<div class="clear"></div>
   				<h1 class="post-title">How hugo turned me into a blogger wannabe</h1>
@@ -130,7 +130,7 @@ The idea here is to give you an overview of how I am developing and updating the
 <p><a href="https://gohugo.io/">Hugo</a>, alongside <a href="https://pages.github.com/">Github Pages</a>, are the main reasons why I have finally decided to start this project.</p>
 
 <p><strong>Hugo</strong> is &ldquo;<em>a fast and modern static website engine</em>&rdquo;. That is, a <strong>HUGE</strong> help when you want to just write your thoughs, without worrying about themes, styles, and general web-development-related issues.
-It is easy to install and configure (short tutorial is down the road), light, fast (gotta love <a href="https://golang.org/">go</a>, open source&hellip; I could go on for miles.
+It is easy to install and configure (short tutorial is down the road), light, fast (gotta love <a href="https://golang.org/">go</a>), open source&hellip; I could go on for miles.
 There are downsides and negative aspects too, but the moment you realize what hugo is meant for you also realize that negative aspects turn into features; you will realize this in a few weeks of usage.</p>
 
 <p><strong>Github Pages</strong> allows you to create and publish websites for your projects, as well as personal blogs or portfolios.
@@ -153,7 +153,7 @@ Damn, you gotta love this things; and to bring you on board with me, let&rsquo;s
 
 <h3 id="before-you-start">Before you start</h3>
 
-<p>If you heven&rsquo;t already done that, check that hugo is correctly configured by running</p>
+<p>If you haven&rsquo;t already done that, check that hugo is correctly configured by running</p>
 
 <pre><code>hugo help
 </code></pre>
@@ -224,7 +224,7 @@ You can write these files in <code>YAML</code>, <code>JSON</code>, or <code>TOML
 <h2 id="step-2-create-contents">Step 2: Create contents</h2>
 
 <p>Let&rsquo;s add a new post to our <code>blog</code>. We will use the <code>hugo new</code> command to create a new post.
-In our example, we wat to create a welcome post to greet users visiting our blog.
+In our example, we want to create a welcome post to greet users visiting our blog.
 Make sure you are inside the <code>blog</code> directory and type</p>
 
 <pre><code>hugo new post/welcome
@@ -307,19 +307,25 @@ For our example, we will use the <code>bleak</code> theme (the same I am using f
 
 <p>Go to <a href="http://localhost:1313">http://localhost:1313</a> and enjoy your freshly crafted blog.</p>
 
-<p>Now let&rsquo;s get back to code and try to understand how themes work, in orde to customize and modify them.
-A theme consist of the following:
-- <strong>theme.toml</strong> is the theme configuration file that gives information about the theme like name and description of theme, author details, and theme license.
-- <strong>images</strong> directory contains four images, <code>screenshot.png</code>, <code>tn.png</code>, <code>full_blog.png</code> and <code>full_post.png</code>.
+<p>Now let&rsquo;s get back to code and try to understand how themes work, in order to customize and modify them.
+A theme consist of the following:</p>
+
+<ul>
+<li><p><strong>theme.toml</strong> is the theme configuration file that gives information about the theme like name and description of theme, author details, and theme license.</p></li>
+
+<li><p><strong>images</strong> directory contains four images, <code>screenshot.png</code>, <code>tn.png</code>, <code>full_blog.png</code> and <code>full_post.png</code>.
 These images are examples of what the theme looks like;
-as an example <code>screenshot.png</code> is the image of the list view and <code>tn.png</code> is the single post view.
-- <strong>layouts</strong> directory contains different views for different content types.
+as an example <code>screenshot.png</code> is the image of the list view and <code>tn.png</code> is the single post view.</p></li>
+
+<li><p><strong>layouts</strong> directory contains different views for different content types.
 Every content type should have two files <code>single.html</code> and <code>list.html</code>.
 <code>single.html</code> is used for rendering a single piece of content.
-<code>list.html</code> is used to view a list of content items.
-- <strong>static</strong> directory stores all the static assets used by the template.</p>
+<code>list.html</code> is used to view a list of content items.</p></li>
 
-<p>Obviously you clone multiple themes and test theme using the <code>--theme</code> argument.</p>
+<li><p><strong>static</strong> directory stores all the static assets used by the template.</p></li>
+</ul>
+
+<p>Obviously you can clone multiple themes and test theme using the <code>--theme</code> argument.</p>
 
 <h2 id="step-5-update-config-file">Step 5: Update config file</h2>
 
@@ -364,7 +370,7 @@ first edit <code>blog/config.toml</code>, changing the baseurl line to:</p>
 <pre><code>baseurl = &quot;https://username.github.io/&quot;
 </code></pre>
 
-<p>The type</p>
+<p>Then type</p>
 
 <pre><code>hugo --theme=hugo-theme-bleak
 </code></pre>
@@ -389,6 +395,7 @@ git push origin master
 <p>Anytime, you can regenerate the site with:</p>
 
 <pre><code>hugo --theme=hugo_theme_robust
+cd public
 git add --all
 git commit -m &quot;&lt;some change message&gt;&quot;
 git push origin master

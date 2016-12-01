@@ -35,7 +35,7 @@ The idea here is to give you an overview of how I am developing and updating the
 &lt;p&gt;&lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;, alongside &lt;a href=&#34;https://pages.github.com/&#34;&gt;Github Pages&lt;/a&gt;, are the main reasons why I have finally decided to start this project.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Hugo&lt;/strong&gt; is &amp;ldquo;&lt;em&gt;a fast and modern static website engine&lt;/em&gt;&amp;rdquo;. That is, a &lt;strong&gt;HUGE&lt;/strong&gt; help when you want to just write your thoughs, without worrying about themes, styles, and general web-development-related issues.
-It is easy to install and configure (short tutorial is down the road), light, fast (gotta love &lt;a href=&#34;https://golang.org/&#34;&gt;go&lt;/a&gt;, open source&amp;hellip; I could go on for miles.
+It is easy to install and configure (short tutorial is down the road), light, fast (gotta love &lt;a href=&#34;https://golang.org/&#34;&gt;go&lt;/a&gt;), open source&amp;hellip; I could go on for miles.
 There are downsides and negative aspects too, but the moment you realize what hugo is meant for you also realize that negative aspects turn into features; you will realize this in a few weeks of usage.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Github Pages&lt;/strong&gt; allows you to create and publish websites for your projects, as well as personal blogs or portfolios.
@@ -58,7 +58,7 @@ Damn, you gotta love this things; and to bring you on board with me, let&amp;rsq
 
 &lt;h3 id=&#34;before-you-start&#34;&gt;Before you start&lt;/h3&gt;
 
-&lt;p&gt;If you heven&amp;rsquo;t already done that, check that hugo is correctly configured by running&lt;/p&gt;
+&lt;p&gt;If you haven&amp;rsquo;t already done that, check that hugo is correctly configured by running&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;hugo help
 &lt;/code&gt;&lt;/pre&gt;
@@ -129,7 +129,7 @@ You can write these files in &lt;code&gt;YAML&lt;/code&gt;, &lt;code&gt;JSON&lt;
 &lt;h2 id=&#34;step-2-create-contents&#34;&gt;Step 2: Create contents&lt;/h2&gt;
 
 &lt;p&gt;Let&amp;rsquo;s add a new post to our &lt;code&gt;blog&lt;/code&gt;. We will use the &lt;code&gt;hugo new&lt;/code&gt; command to create a new post.
-In our example, we wat to create a welcome post to greet users visiting our blog.
+In our example, we want to create a welcome post to greet users visiting our blog.
 Make sure you are inside the &lt;code&gt;blog&lt;/code&gt; directory and type&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;hugo new post/welcome
@@ -212,19 +212,25 @@ For our example, we will use the &lt;code&gt;bleak&lt;/code&gt; theme (the same 
 
 &lt;p&gt;Go to &lt;a href=&#34;http://localhost:1313&#34;&gt;http://localhost:1313&lt;/a&gt; and enjoy your freshly crafted blog.&lt;/p&gt;
 
-&lt;p&gt;Now let&amp;rsquo;s get back to code and try to understand how themes work, in orde to customize and modify them.
-A theme consist of the following:
-- &lt;strong&gt;theme.toml&lt;/strong&gt; is the theme configuration file that gives information about the theme like name and description of theme, author details, and theme license.
-- &lt;strong&gt;images&lt;/strong&gt; directory contains four images, &lt;code&gt;screenshot.png&lt;/code&gt;, &lt;code&gt;tn.png&lt;/code&gt;, &lt;code&gt;full_blog.png&lt;/code&gt; and &lt;code&gt;full_post.png&lt;/code&gt;.
+&lt;p&gt;Now let&amp;rsquo;s get back to code and try to understand how themes work, in order to customize and modify them.
+A theme consist of the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;theme.toml&lt;/strong&gt; is the theme configuration file that gives information about the theme like name and description of theme, author details, and theme license.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;images&lt;/strong&gt; directory contains four images, &lt;code&gt;screenshot.png&lt;/code&gt;, &lt;code&gt;tn.png&lt;/code&gt;, &lt;code&gt;full_blog.png&lt;/code&gt; and &lt;code&gt;full_post.png&lt;/code&gt;.
 These images are examples of what the theme looks like;
-as an example &lt;code&gt;screenshot.png&lt;/code&gt; is the image of the list view and &lt;code&gt;tn.png&lt;/code&gt; is the single post view.
-- &lt;strong&gt;layouts&lt;/strong&gt; directory contains different views for different content types.
+as an example &lt;code&gt;screenshot.png&lt;/code&gt; is the image of the list view and &lt;code&gt;tn.png&lt;/code&gt; is the single post view.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;layouts&lt;/strong&gt; directory contains different views for different content types.
 Every content type should have two files &lt;code&gt;single.html&lt;/code&gt; and &lt;code&gt;list.html&lt;/code&gt;.
 &lt;code&gt;single.html&lt;/code&gt; is used for rendering a single piece of content.
-&lt;code&gt;list.html&lt;/code&gt; is used to view a list of content items.
-- &lt;strong&gt;static&lt;/strong&gt; directory stores all the static assets used by the template.&lt;/p&gt;
+&lt;code&gt;list.html&lt;/code&gt; is used to view a list of content items.&lt;/p&gt;&lt;/li&gt;
 
-&lt;p&gt;Obviously you clone multiple themes and test theme using the &lt;code&gt;--theme&lt;/code&gt; argument.&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;static&lt;/strong&gt; directory stores all the static assets used by the template.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Obviously you can clone multiple themes and test theme using the &lt;code&gt;--theme&lt;/code&gt; argument.&lt;/p&gt;
 
 &lt;h2 id=&#34;step-5-update-config-file&#34;&gt;Step 5: Update config file&lt;/h2&gt;
 
@@ -269,7 +275,7 @@ first edit &lt;code&gt;blog/config.toml&lt;/code&gt;, changing the baseurl line 
 &lt;pre&gt;&lt;code&gt;baseurl = &amp;quot;https://username.github.io/&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The type&lt;/p&gt;
+&lt;p&gt;Then type&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;hugo --theme=hugo-theme-bleak
 &lt;/code&gt;&lt;/pre&gt;
@@ -294,6 +300,7 @@ git push origin master
 &lt;p&gt;Anytime, you can regenerate the site with:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;hugo --theme=hugo_theme_robust
+cd public
 git add --all
 git commit -m &amp;quot;&amp;lt;some change message&amp;gt;&amp;quot;
 git push origin master
