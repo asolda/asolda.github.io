@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Post-rsses on The asolda blog</title>
+    <title>Post-rsses on Yet another computer science blog</title>
     <link>https://asolda.github.io/post/index.xml</link>
-    <description>Recent content in Post-rsses on The asolda blog</description>
+    <description>Recent content in Post-rsses on Yet another computer science blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 01 Dec 2016 15:13:03 +0100</lastBuildDate>
     <atom:link href="https://asolda.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>How hugo turned me into a blogger wannabe</title>
+      <title>How Hugo turned me into a blogger wannabe</title>
       <link>https://asolda.github.io/post/Welcome/</link>
       <pubDate>Thu, 01 Dec 2016 15:13:03 +0100</pubDate>
       
@@ -19,7 +19,7 @@
 
 &lt;h1 id=&#34;what-is-this&#34;&gt;What is this?&lt;/h1&gt;
 
-&lt;p&gt;I have decided to finally start a blog. This is just a welcome message (mostly realized to test hugo, Github Pages and a few themes).
+&lt;p&gt;I have decided to finally start a blog. This is just a welcome message (mostly realized to test Hugo, Github Pages and a few themes).
 In this blog I will talk about the project I work on in my free time; topics range from machine/deep learning to social network analysis, distributed computing and more.
 Some projects are my own ideas, others are the result of me playing with coll stuff you find around the web.
 This first article is about the technical details behind the blog itself, what technologies I&amp;rsquo;m using, how I&amp;rsquo;ve set up my workflow and how hugo convinced me to start this.&lt;/p&gt;
@@ -36,21 +36,21 @@ The idea here is to give you an overview of how I am developing and updating the
 
 &lt;p&gt;&lt;strong&gt;Hugo&lt;/strong&gt; is &amp;ldquo;&lt;em&gt;a fast and modern static website engine&lt;/em&gt;&amp;rdquo;. That is, a &lt;strong&gt;HUGE&lt;/strong&gt; help when you want to just write your thoughs, without worrying about themes, styles, and general web-development-related issues.
 It is easy to install and configure (short tutorial is down the road), light, fast (gotta love &lt;a href=&#34;https://golang.org/&#34;&gt;go&lt;/a&gt;), open source&amp;hellip; I could go on for miles.
-There are downsides and negative aspects too, but the moment you realize what hugo is meant for you also realize that negative aspects turn into features; you will realize this in a few weeks of usage.&lt;/p&gt;
+There are downsides and negative aspects too, but the moment you realize what Hugo is meant for you also realize that negative aspects turn into features; you will realize this in a few weeks of usage.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Github Pages&lt;/strong&gt; allows you to create and publish websites for your projects, as well as personal blogs or portfolios.
 The code for you site is hosted directly from your GitHub repository. Just edit, push, and your changes are live.&lt;/p&gt;
 
-&lt;p&gt;The way hugo and Github Pages interact is mesmerizing; this instruments team up for a produtictivity boost comparable to the introductions of rounded wheels over squared ones.
+&lt;p&gt;The way Hugo and Github Pages interact is mesmerizing; this instruments team up for a produtictivity boost comparable to the introductions of rounded wheels over squared ones.
 Damn, you gotta love this things; and to bring you on board with me, let&amp;rsquo;s dive into a tutorial on how to setup this workflow.&lt;/p&gt;
 
 &lt;p&gt;Please note that I will assume that you already use git. In case you don&amp;rsquo;t, &lt;a href=&#34;https://git-scm.com/book/en/v2/Getting-Started-Installing-Git&#34;&gt;here you are&lt;/a&gt; (and you&amp;rsquo;re a bad person).&lt;/p&gt;
 
 &lt;h1 id=&#34;let-s-start-the-party&#34;&gt;Let&amp;rsquo;s start the party&lt;/h1&gt;
 
-&lt;h2 id=&#34;step-0-install-and-configure-hugo&#34;&gt;Step 0: Install and configure hugo&lt;/h2&gt;
+&lt;h2 id=&#34;step-0-install-and-configure-hugo&#34;&gt;Step 0: Install and configure Hugo&lt;/h2&gt;
 
-&lt;p&gt;You only need to follow this steps the first time you use hugo. Since it is written in go, it supports multiple platforms and comes in pre-built binaries available &lt;a href=&#34;https://github.com/spf13/hugo/releases&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You only need to follow this steps the first time you use Hugo. Since it is written in go, it supports multiple platforms and comes in pre-built binaries available &lt;a href=&#34;https://github.com/spf13/hugo/releases&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;A complete installation guide is available &lt;a href=&#34;https://gohugo.io/overview/installing/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
@@ -58,7 +58,7 @@ Damn, you gotta love this things; and to bring you on board with me, let&amp;rsq
 
 &lt;h3 id=&#34;before-you-start&#34;&gt;Before you start&lt;/h3&gt;
 
-&lt;p&gt;If you haven&amp;rsquo;t already done that, check that hugo is correctly configured by running&lt;/p&gt;
+&lt;p&gt;If you haven&amp;rsquo;t already done that, check that Hugo is correctly configured by running&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;hugo help
 &lt;/code&gt;&lt;/pre&gt;
@@ -80,7 +80,7 @@ Usage:
 
 &lt;p&gt;It goes on for a while.&lt;/p&gt;
 
-&lt;h2 id=&#34;step-1-create-your-first-hugo-project&#34;&gt;Step 1: Create your first hugo project&lt;/h2&gt;
+&lt;h2 id=&#34;step-1-create-your-first-hugo-project&#34;&gt;Step 1: Create your first Hugo project&lt;/h2&gt;
 
 &lt;p&gt;In this short example we will create a blog.&lt;/p&gt;
 
@@ -89,7 +89,7 @@ Usage:
 &lt;pre&gt;&lt;code&gt;hugo new site blog
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Change directory to &lt;code&gt;blog&lt;/code&gt; and you will see that hugo has created directories to store all the files required for your website.&lt;/p&gt;
+&lt;p&gt;Change directory to &lt;code&gt;blog&lt;/code&gt; and you will see that Hugo has created directories to store all the files required for your website.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;drwxr-xr-x  2 user   68 Nov 30 23:58 archetypes
 -rw-r--r--  1 user   97 Dec  1 00:22 config.toml
@@ -103,7 +103,7 @@ drwxr-xr-x  6 user  204 Dec  1 00:20 themes
 &lt;p&gt;The directory has 6 sub-directories and 1 file. Let&amp;rsquo;s look at each one of them:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;archetypes: You can create new content files in hugo using the &lt;code&gt;hugo new&lt;/code&gt; command.
+&lt;li&gt;&lt;p&gt;archetypes: You can create new content files in Hugo using the &lt;code&gt;hugo new&lt;/code&gt; command.
 When you run that command, it adds few configuration properties to the post like date and title.
 Archetype allows you to define your own configuration properties that will be added to the post front matter whenever &lt;code&gt;hugo new&lt;/code&gt; command is used.&lt;/p&gt;&lt;/li&gt;
 
@@ -204,7 +204,7 @@ Yet another wonderful blank page. We are missing the theme, remember that?&lt;/p
 There are a lot of open-source themes available &lt;a href=&#34;https://themes.gohugo.io/&#34;&gt;here&lt;/a&gt; that you can use.&lt;/p&gt;
 
 &lt;p&gt;In order to add a theme move to the &lt;code&gt;themes&lt;/code&gt; directory inside the root of your website and clone a theme for your website.
-For our example, we will use the &lt;code&gt;bleak&lt;/code&gt; theme (the same I am using for my blog).&lt;/p&gt;
+For our example, we will use the &lt;code&gt;bleak&lt;/code&gt; theme.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Inside the themes directory&lt;/strong&gt; run &lt;code&gt;git clone https://github.com/Zenithar/hugo-theme-bleak.git&lt;/code&gt;&lt;/p&gt;
 
