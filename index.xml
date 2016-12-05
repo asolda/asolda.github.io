@@ -6,8 +6,244 @@
     <description>Recent content on Yet another computer science blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 01 Dec 2016 15:13:03 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 05 Dec 2016 14:42:46 +0100</lastBuildDate>
     <atom:link href="https://asolda.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>The day I found out my computer does drugs</title>
+      <link>https://asolda.github.io/post/deepdream/</link>
+      <pubDate>Mon, 05 Dec 2016 14:42:46 +0100</pubDate>
+      
+      <guid>https://asolda.github.io/post/deepdream/</guid>
+      <description>
+
+&lt;h1 id=&#34;exploring-the-unknown&#34;&gt;Exploring the unknown&lt;/h1&gt;
+
+&lt;p&gt;In this article we will talk about &lt;strong&gt;deep convolutional neural network&lt;/strong&gt;, a.k.a. how computers are going to rule the world.
+Someday. Eventually. Definetely not right now, mostly because I&amp;rsquo;ve come to the realization that my computer is constantly high on some weird acid.
+More on this later. For now, let&amp;rsquo;s just understand that we are going to talk about complex topics, that this article isn&amp;rsquo;t meant for everyone out there and that I won&amp;rsquo;t have the time to explain everithing I say&amp;hellip;
+I just hope you&amp;rsquo;ll follow through.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-we-doing&#34;&gt;What are we doing?&lt;/h2&gt;
+
+&lt;p&gt;We want to take a look at what deep convolutional neural networks (convnets) really learn, and how they understand the images we feed them.&lt;/p&gt;
+
+&lt;p&gt;We will use &lt;a href=&#34;https://keras.io/&#34;&gt;Keras&lt;/a&gt;, a Deep Learning library for &lt;a href=&#34;http://deeplearning.net/software/theano/&#34;&gt;Theano&lt;/a&gt; and &lt;a href=&#34;https://www.tensorflow.org/&#34;&gt;TensorFlow&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Keras&lt;/strong&gt; is a high-level neural networks library, written in Python and capable of running on top of either TensorFlow or Theano.
+It was developed with a focus on enabling fast experimentation, allowing researchers to &amp;ldquo;&lt;em&gt;go from idea to result with the least possible delay&lt;/em&gt;&amp;rdquo;.
+It is a really interesting project and can be extremely useful.
+In this post I will be using &lt;strong&gt;Keras&lt;/strong&gt; on top of &lt;strong&gt;TensorFlow&lt;/strong&gt;, but the code can be seamlessy adapted to work on top of Theano if you prefer.&lt;/p&gt;
+
+&lt;p&gt;We will use Keras to visualize inputs that maximize the activation of the filters in different layers of the VGG16 architecture, trained on &lt;a href=&#34;http://www.image-net.org/&#34;&gt;ImageNet&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&#34;visualizing-convnet-filters&#34;&gt;Visualizing convnet filters&lt;/h1&gt;
+
+&lt;p&gt;VGG16 (also called OxfordNet) is a convolutional neural network architecture named after the &lt;a href=&#34;http://www.robots.ox.ac.uk/~vgg/&#34;&gt;Visual Geometry Group&lt;/a&gt; from Oxford, who developed it.
+It was used to win the &lt;a href=&#34;http://www.robots.ox.ac.uk/~vgg/research/very_deep/&#34;&gt;ILSVR (ImageNet) competition in 2014&lt;/a&gt;.
+To this day is it still considered to be an excellent vision model, although it has been somewhat outperformed by more recent advances (Inception, ResNet).&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.lorenzobaraldi.com/&#34;&gt;Lorenzo Baraldi&lt;/a&gt; ported the pre-trained Caffe version of VGG16 (as well as VGG19) to a Keras weights file, so we will just load that to do our experiments. You can download the weight file &lt;a href=&#34;https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Loading the model is made easy by Keras:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# build the VGG16 network with ImageNet weights
+model = vgg16.VGG16(weights=&#39;imagenet&#39;, include_top=False)
+print(&#39;Model loaded.&#39;)
+
+model.summary()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yup, it&amp;rsquo;s &lt;strong&gt;that&lt;/strong&gt; easy. Moving along, we prepare a couple of utilities that we will need later:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A &lt;strong&gt;placeholder&lt;/strong&gt; (&lt;a href=&#34;https://www.tensorflow.org/versions/r0.12/api_docs/python/io_ops.html&#34;&gt;read the doc&lt;/a&gt; if you&amp;rsquo;re confused):&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;# this is the placeholder for the input images
+input_img = model.input
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A &lt;strong&gt;dictionary&lt;/strong&gt; that we will use to create &lt;em&gt;ad-hoc&lt;/em&gt; loss functions:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;# get the symbolic outputs of each &amp;quot;key&amp;quot; layer (we gave them unique names).
+layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A utility function to &lt;strong&gt;normalize&lt;/strong&gt; a Tensor (using its L2 Norm)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;def normalize(x):
+    return x / (K.sqrt(K.mean(K.square(x))) + 1e-5)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Moving to the interesting part of the code, it&amp;rsquo;s now time to scan through the filters, compute the loss functions and visualize the most interesting filters.
+The scanning process is pretty straightforward:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kept_filters = []
+for filter_index in range(0, 200):
+    # we only scan through the first 200 filters,
+    # but there are more (512)
+    print(&#39;Processing filter %d&#39; % filter_index)
+    start_time = time.time()
+
+    # we build a loss function that maximizes the activation
+    # of the nth filter of the layer considered
+    layer_output = layer_dict[layer_name].output
+    if K.image_dim_ordering() == &#39;th&#39;:
+        loss = K.mean(layer_output[:, filter_index, :, :])
+    else:
+        loss = K.mean(layer_output[:, :, :, filter_index])
+
+    # we compute the gradient of the input picture wrt this loss
+    grads = K.gradients(loss, input_img)[0]
+
+    # normalization trick: we normalize the gradient
+    grads = normalize(grads)
+
+    # this function returns the loss and grads given the input picture
+    iterate = K.function([input_img], [loss, grads])
+
+    # step size for gradient ascent
+    step = 1.
+
+    # we start from a gray image with some random noise
+    if K.image_dim_ordering() == &#39;th&#39;:
+        input_img_data = np.random.random((1, 3, img_width, img_height))
+    else:
+        input_img_data = np.random.random((1, img_width, img_height, 3))
+    input_img_data = (input_img_data - 0.5) * 20 + 128
+
+    # we run gradient ascent for 20 steps
+    for i in range(20):
+        loss_value, grads_value = iterate([input_img_data])
+        input_img_data += grads_value * step
+
+        print(&#39;Current loss value:&#39;, loss_value)
+        if loss_value &amp;lt;= 0.:
+            # some filters get stuck to 0, we can skip them
+            break
+
+    # decode the resulting input image
+    if loss_value &amp;gt; 0:
+        img = deprocess_image(input_img_data[0])
+        kept_filters.append((img, loss_value))
+    end_time = time.time()
+    print(&#39;Filter %d processed in %ds&#39; % (filter_index, end_time - start_time))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The code is well commented and Keras makes everything extremely linear and readable.
+Just a couple of notes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The &lt;code&gt;loss function&lt;/code&gt; is easy, but effective for our purpose.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &amp;ldquo;&lt;em&gt;normalization trick&lt;/em&gt;&amp;rdquo; is worth pointing out, start your research from &lt;a href=&#34;http://stats.stackexchange.com/questions/22568/difference-in-using-normalized-gradient-and-gradient&#34;&gt;here&lt;/a&gt; if you are interested.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;code&gt;deprocess_image&lt;/code&gt; function can be a little bit tricky, but here you are:&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;# util function to convert a tensor into a valid image
+def deprocess_image(x):
+    # normalize tensor: center on 0., ensure std is 0.1
+    x -= x.mean()
+    x /= (x.std() + 1e-5)
+    x *= 0.1
+
+    # clip to [0, 1]
+    x += 0.5
+    x = np.clip(x, 0, 1)
+
+    # convert to RGB array
+    x *= 255
+    if K.image_dim_ordering() == &#39;th&#39;:
+        x = x.transpose((1, 2, 0))
+    x = np.clip(x, 0, 255).astype(&#39;uint8&#39;)
+    return x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The &lt;code&gt;layer_name&lt;/code&gt; variable should look like this:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;# the name of the layer we want to visualize
+# (see model definition at keras/applications/vgg16.py)
+layer_name = &#39;block5_conv1&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can now move on to select the &amp;ldquo;best&amp;rdquo; layers;
+the filters that have the highest loss are supposed to be the best looking:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# we will stich the best 64 filters on a 8 x 8 grid.
+n = 8
+
+# we will only keep the top 64 filters.
+kept_filters.sort(key=lambda x: x[1], reverse=True)
+kept_filters = kept_filters[:n * n]
+
+# build a black picture with enough space for
+# our 8 x 8 filters of size 128 x 128, with a 5px margin in between
+margin = 5
+width = n * img_width + (n - 1) * margin
+height = n * img_height + (n - 1) * margin
+stitched_filters = np.zeros((width, height, 3))
+
+# fill the picture with our saved filters
+for i in range(n):
+    for j in range(n):
+        img, loss = kept_filters[i * n + j]
+        stitched_filters[(img_width + margin) * i: (img_width + margin) * i + img_width,
+                         (img_height + margin) * j: (img_height + margin) * j + img_height, :] = img
+
+# save the result to disk
+imsave(&#39;stitched_filters_%dx%d.png&#39; % (n, n), stitched_filters)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# dimensions of the generated pictures for each filter.
+img_width = 128
+img_height = 128
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;the image we are getting is this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/filters.png&#34; alt=&#34;block5_conv1&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can obviously use this code to visualize different filters for each layer.
+If you do this, you will notice that the first layers basically just encode direction and color.
+These direction and color filters then get combined into basic grid and spot textures.
+These textures gradually get combined into increasingly complex patterns.&lt;/p&gt;
+
+&lt;p&gt;In the highest layers (like the one above) we start to recognize textures similar to that found in the objects that network was trained to classify, such as feathers, eyes, etc.&lt;/p&gt;
+
+&lt;p&gt;Another fun thing to do is to apply these filters to photos (rather than to noisy all-gray inputs).
+This is the principle of &lt;a href=&#34;https://en.wikipedia.org/wiki/DeepDream&#34;&gt;Deep Dreams&lt;/a&gt;, popularized by Google last year.&lt;/p&gt;
+
+&lt;p&gt;We will learn how to implement Deep Dream in the next article, in the meanwhile you can have fun visualizing different layers and using photos as a starting point for filters visualization.&lt;/p&gt;
+
+&lt;h1 id=&#34;summary&#34;&gt;Summary&lt;/h1&gt;
+
+&lt;p&gt;The key message here is that &lt;strong&gt;convnets don&amp;rsquo;t understand concepts&lt;/strong&gt; just because thay are able to classify objects.
+The visual decomposition of visual space learned by a convnet is (apparently) analogous to what the human visual cortex does.
+It may or may not be true. So what do they understand? Basically two things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;They understand a &lt;strong&gt;decomposition of their visual input space&lt;/strong&gt; as a hierarchical-modular network of convolution filters.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;They understand a &lt;strong&gt;probabilitistic mapping between certain combinations of these filters&lt;/strong&gt; and a set of arbitrary labels.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Naturally, this does not qualify as &amp;ldquo;seeing&amp;rdquo; in any human sense, and it doesn&amp;rsquo;t mean we have solved computer vision.&lt;/p&gt;
+
+&lt;p&gt;That said, visualizing what convnets learn is quite fascinating.
+Deep learning may not be intelligence in any real sense, but it&amp;rsquo;s still working considerably better than anybody could have anticipated just a few years ago.
+Guess it&amp;rsquo;s about time someone figures out &lt;strong&gt;why&lt;/strong&gt;&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>How Hugo turned me into a blogger wannabe</title>
