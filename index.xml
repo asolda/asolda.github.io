@@ -6,8 +6,402 @@
     <description>Recent content on Yet another computer science blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 05 Dec 2016 14:42:46 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 06 Dec 2016 14:56:57 +0100</lastBuildDate>
     <atom:link href="https://asolda.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Bake your own Deep Dream</title>
+      <link>https://asolda.github.io/post/bakedream/</link>
+      <pubDate>Tue, 06 Dec 2016 14:56:57 +0100</pubDate>
+      
+      <guid>https://asolda.github.io/post/bakedream/</guid>
+      <description>
+
+&lt;p&gt;This article is a follow up to &lt;a href=&#34;https://asolda.github.io/post/deepdream/&#34;&gt;this article&lt;/a&gt;; I suggest you check it out before moving on.&lt;/p&gt;
+
+&lt;h1 id=&#34;an-article-with-a-purpose&#34;&gt;An article with a purpose&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;Deep Learning&lt;/strong&gt; is, without a doubt, an interesting and fascinating topic.
+It can be applied in many different contexts, from image recognition to text processing;
+companies like Google and Facebook heavily rely on Deep Learning to offer many of their services.&lt;/p&gt;
+
+&lt;p&gt;However, we are not going to understand how DL can integrate inside business logics; that would be constructive and useful, &lt;em&gt;ergo&lt;/em&gt; not suited for this blog.&lt;/p&gt;
+
+&lt;p&gt;Instead, we are going to take a deeper look at Google &lt;a href=&#34;https://en.wikipedia.org/wiki/DeepDream&#34;&gt;Deep Dream&lt;/a&gt;,
+aiming to create this hypnotic images by ourself.
+Please note that, jokes aside, this &lt;strong&gt;is&lt;/strong&gt; indeed useful, allowing us to better undestand the processes that take place during the classification procedure.&lt;/p&gt;
+
+&lt;h2 id=&#34;tools&#34;&gt;Tools&lt;/h2&gt;
+
+&lt;p&gt;Once again, we are going to use &lt;a href=&#34;https://keras.io/&#34;&gt;Keras&lt;/a&gt; on top of &lt;a href=&#34;https://www.tensorflow.org/&#34;&gt;TensorFlow&lt;/a&gt;,
+to mantain the code readable and to avoid complications.&lt;/p&gt;
+
+&lt;p&gt;We are going to implement our own Deep Dream convnet using the &lt;a href=&#34;https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3&#34;&gt;pre-trained weights&lt;/a&gt; we have already used last time.&lt;/p&gt;
+
+&lt;p&gt;The code, however, will be slightly different and we are not reusing the one we wrote last time.&lt;/p&gt;
+
+&lt;h1 id=&#34;the-coding-bit&#34;&gt;The coding bit&lt;/h1&gt;
+
+&lt;p&gt;First of, we start with a few utilities:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from __future__ import print_function
+from keras.preprocessing.image import load_img, img_to_array
+import numpy as np
+from scipy.misc import imsave
+from scipy.optimize import fmin_l_bfgs_b
+import time
+import argparse
+
+from keras.applications import vgg16
+from keras import backend as K
+from keras.layers import Input
+
+parser = argparse.ArgumentParser(description=&#39;Deep dream implelentation with TensorFlow&#39;)
+parser.add_argument(&#39;base_image_path&#39;, metavar=&#39;base&#39;, type=str,
+                    help=&#39;Path to the image to transform.&#39;)
+parser.add_argument(&#39;result_prefix&#39;, metavar=&#39;res_prefix&#39;, type=str,
+                    help=&#39;Prefix for the saved results.&#39;)
+
+args = parser.parse_args()
+base_image_path = args.base_image_path
+result_prefix = args.result_prefix
+
+N_ITER = 100
+
+# dimensions of the generated picture.
+img_width = 450
+img_height = 900
+
+# path to the model weights file.
+weights_path = &#39;vgg16_weights.h5&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;These utilities include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;import&lt;/code&gt; statements&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Argument&lt;/strong&gt; handling: we expect two parameters, the starting image and a prefix to save the output images&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The maximum number of iterations to perform (&lt;code&gt;N_ITER&lt;/code&gt;)&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Dimensions&lt;/strong&gt; for the generated images&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;strong&gt;weights&lt;/strong&gt; to use for our network (VGG16)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Loading the model is, like last time, pretty straightforward:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# this will contain our generated image
+dream = Input(batch_shape=(1,) + img_size)
+
+# build the VGG16 network with our placeholder
+# the model will be loaded with pre-trained ImageNet weights
+model = vgg16.VGG16(input_tensor=dream,
+                    weights=&#39;imagenet&#39;, include_top=False)
+print(&#39;Model loaded.&#39;)
+
+layer_dict = dict([(layer.name, layer) for layer in model.layers])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We create a &lt;code&gt;placeholder&lt;/code&gt; and we use it as the &lt;code&gt;input_tensor&lt;/code&gt; for our network.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;img_size&lt;/code&gt; variable is computed this way:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if K.image_dim_ordering() == &#39;th&#39;:
+    img_size = (3, img_width, img_height)
+else:
+    img_size = (img_width, img_height, 3)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;dim_ordering&lt;/code&gt; can either be &amp;ldquo;tf&amp;rdquo; or &amp;ldquo;th&amp;rdquo;.
+It tells Keras whether to use Theano or TensorFlow dimension ordering for inputs/kernels/ouputs.&lt;/p&gt;
+
+&lt;p&gt;We can now write our loss function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# define the loss
+loss = K.variable(0.)
+for layer_name in settings[&#39;features&#39;]:
+    # add the L2 norm of the features of a layer to the loss
+    assert layer_name in layer_dict.keys(), &#39;Layer &#39; + layer_name + &#39; not found in model.&#39;
+    coeff = settings[&#39;features&#39;][layer_name]
+    x = layer_dict[layer_name].output
+    shape = layer_dict[layer_name].output_shape
+    # we avoid border artifacts by only involving non-border pixels in the loss
+    if K.image_dim_ordering() == &#39;th&#39;:
+        loss -= coeff * K.sum(K.square(x[:, :, 2: shape[2] - 2, 2: shape[3] - 2])) / np.prod(shape[1:])
+    else:
+        loss -= coeff * K.sum(K.square(x[:, 2: shape[1] - 2, 2: shape[2] - 2, :])) / np.prod(shape[1:])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next step is applying a couple of tweaks to achieve better results:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;A &lt;strong&gt;continuity loss&lt;/strong&gt;, to give the image local coherence and avoid messy blurs&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The &lt;strong&gt;L2 norm loss&lt;/strong&gt; in order to prevent pixels from taking very high values&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Two lines of code will suffice:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# add continuity loss
+loss += settings[&#39;continuity&#39;] * continuity_loss(dream) / np.prod(img_size)
+# add image L2 norm to loss
+loss += settings[&#39;dream_l2&#39;] * K.sum(K.square(dream)) / np.prod(img_size)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;where &lt;code&gt;continuity_loss&lt;/code&gt; is a utility function defined by us:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# continuity loss util function
+def continuity_loss(x):
+    assert K.ndim(x) == 4
+    if K.image_dim_ordering() == &#39;th&#39;:
+        a = K.square(x[:, :, :img_width - 1, :img_height - 1] -
+                     x[:, :, 1:, :img_height - 1])
+        b = K.square(x[:, :, :img_width - 1, :img_height - 1] -
+                     x[:, :, :img_width - 1, 1:])
+    else:
+        a = K.square(x[:, :img_width - 1, :img_height-1, :] -
+                     x[:, 1:, :img_height - 1, :])
+        b = K.square(x[:, :img_width - 1, :img_height-1, :] -
+                     x[:, :img_width - 1, 1:, :])
+    return K.sum(K.pow(a + b, 1.25))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Our model is now complete.
+You can feel free to further modify the loss as you see fit, to achieve new effects.&lt;/p&gt;
+
+&lt;p&gt;Now things can get a little bit trickier:
+we need to evaluate our loss and our gradients in one pass, but &lt;code&gt;scipy.optimize&lt;/code&gt; requires separate functions for loss and gradients,
+and computing them separately would be inefficient.
+To solve this we create our own &lt;code&gt;Evaluator&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Evaluator(object):
+    def __init__(self):
+        self.loss_value = None
+        self.grad_values = None
+
+    def loss(self, x):
+        assert self.loss_value is None
+        loss_value, grad_values = eval_loss_and_grads(x)
+        self.loss_value = loss_value
+        self.grad_values = grad_values
+        return self.loss_value
+
+    def grads(self, x):
+        assert self.loss_value is not None
+        grad_values = np.copy(self.grad_values)
+        self.loss_value = None
+        self.grad_values = None
+        return grad_values
+
+evaluator = Evaluator()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;eval_loss_and_grads&lt;/code&gt; functions will then read as follow:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# compute the gradients of the dream wrt the loss
+grads = K.gradients(loss, dream)
+
+outputs = [loss]
+if type(grads) in {list, tuple}:
+    outputs += grads
+else:
+    outputs.append(grads)
+
+f_outputs = K.function([dream], outputs)
+def eval_loss_and_grads(x):
+    x = x.reshape((1,) + img_size)
+    outs = f_outputs([x])
+    loss_value = outs[0]
+    if len(outs[1:]) == 1:
+        grad_values = outs[1].flatten().astype(&#39;float64&#39;)
+    else:
+        grad_values = np.array(outs[1:]).flatten().astype(&#39;float64&#39;)
+    return loss_value, grad_values
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All that&amp;rsquo;s left now is to run &lt;a href=&#34;https://en.wikipedia.org/wiki/Limited-memory_BFGS&#34;&gt;L-BFGS&lt;/a&gt; optimizer over the pixels of the generated image,
+in order to minimize the loss:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x = preprocess_image(base_image_path)
+for i in range(N_ITER):
+    print(&#39;Start of iteration&#39;, i)
+    start_time = time.time()
+
+    # add a random jitter to the initial image. This will be reverted at decoding time
+    random_jitter = (settings[&#39;jitter&#39;] * 2) * (np.random.random(img_size) - 0.5)
+    x += random_jitter
+
+    # run L-BFGS for 7 steps
+    x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x.flatten(),
+                                     fprime=evaluator.grads, maxfun=7)
+    print(&#39;Current loss value:&#39;, min_val)
+    # decode the dream and save it
+    x = x.reshape(img_size)
+    x -= random_jitter
+    img = deprocess_image(np.copy(x))
+    fname = result_prefix + &#39;_at_iteration_%d.png&#39; % i
+    imsave(fname, img)
+    end_time = time.time()
+    print(&#39;Image saved as&#39;, fname)
+    print(&#39;Iteration %d completed in %ds&#39; % (i, end_time - start_time))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What are we missing? Just a couple of utility functions and a custom configuration (the &lt;code&gt;settings&lt;/code&gt; variable) for our network:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Here are the functions &lt;code&gt;preprocess_image&lt;/code&gt; and &lt;code&gt;deprocess_image&lt;/code&gt;:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;# util function to open, resize and format pictures into appropriate tensors
+def preprocess_image(image_path):
+    img = load_img(image_path, target_size=(img_width, img_height))
+    img = img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    img = vgg16.preprocess_input(img)
+    return img
+
+# util function to convert a tensor into a valid image
+def deprocess_image(x):
+    if K.image_dim_ordering() == &#39;th&#39;:
+        x = x.reshape((3, img_width, img_height))
+        x = x.transpose((1, 2, 0))
+    else:
+        x = x.reshape((img_width, img_height, 3))
+    # Remove zero-center by mean pixel
+    x[:, :, 0] += 103.939
+    x[:, :, 1] += 116.779
+    x[:, :, 2] += 123.68
+    # &#39;BGR&#39;-&amp;gt;&#39;RGB&#39;
+    x = x[:, :, ::-1]
+    x = np.clip(x, 0, 255).astype(&#39;uint8&#39;)
+    return x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Next up, a couple of example settings that I like:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;saved_settings = {
+    &#39;acid&#39;: {&#39;features&#39;: {&#39;block4_conv1&#39;: 0.05,
+                              &#39;block4_conv2&#39;: 0.01,
+                              &#39;block4_conv3&#39;: 0.01},
+                 &#39;continuity&#39;: 0.1,
+                 &#39;dream_l2&#39;: 0.8,
+                 &#39;jitter&#39;: 5},
+    &#39;doggos&#39;: {&#39;features&#39;: {&#39;block5_conv1&#39;: 0.05,
+                            &#39;block5_conv2&#39;: 0.02},
+               &#39;continuity&#39;: 0.1,
+               &#39;dream_l2&#39;: 0.02,
+               &#39;jitter&#39;: 0},
+}
+
+# the settings we will use in this experiment
+settings = saved_settings[&#39;doggos&#39;]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The results that I&amp;rsquo;ll show below are obtained with the &lt;code&gt;doggos&lt;/code&gt; setting.&lt;/p&gt;
+
+&lt;h1 id=&#34;the-fun-part&#34;&gt;The fun part&lt;/h1&gt;
+
+&lt;p&gt;To test our model I&amp;rsquo;ve chosen famous paintings and I&amp;rsquo;ve run the code above for an &amp;ldquo;appropriate&amp;rdquo; number of iterations.
+I usually prefer images where you can recognize both the original painting and the network&amp;rsquo;s work.&lt;/p&gt;
+
+&lt;h2 id=&#34;input-1-nascita-di-venere&#34;&gt;Input 1: Nascita di Venere&lt;/h2&gt;
+
+&lt;p&gt;The &lt;em&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/The_Birth_of_Venus&#34;&gt;Birth if Venus&lt;/a&gt;&lt;/em&gt; is a painting by Sandro Botticelli generally thought to have been painted in the mid 1480s.
+This is an iconic and easily recognizable painting:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/venus.jpg&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/venus.jpg&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Here are the results after various number of iterations:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;After &lt;strong&gt;1&lt;/strong&gt; iteration&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/venus-1.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/venus-1.png&#34; style=&#34;margin: 0 auto; display: block; width:60%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The painting is clearly there, almost untouched, but you can already see that weird images are forming.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;After &lt;strong&gt;5&lt;/strong&gt; iterations&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/venus-5.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/venus-5.png&#34; style=&#34;margin: 0 auto; display: block; width:60%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;After &lt;strong&gt;10&lt;/strong&gt; iterations&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/venus-10.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/venus-10.png&#34; style=&#34;margin: 0 auto; display: block; width:60%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Here the painting has been heavily modified, and you can recognize animals that the network was trained to recognize.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;After &lt;strong&gt;20&lt;/strong&gt; iterations&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/venus-20.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/venus-20.png&#34; style=&#34;margin: 0 auto; display: block; width:60%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;And finally, after &lt;strong&gt;25&lt;/strong&gt; iterations&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/venus-25.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/venus-25.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This is the point where I like it the most, but it&amp;rsquo;s a matter of personal test and you can perform as many iterations as you like.&lt;/p&gt;
+
+&lt;h2 id=&#34;input-2-creazione-di-adamo&#34;&gt;Input 2: Creazione di Adamo&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&#34;https://en.wikipedia.org/wiki/The_Creation_of_Adam&#34;&gt;Creation of Adam&lt;/a&gt; is a fresco painting by Michelangelo, which forms part of the Sistine Chapel&amp;rsquo;s ceiling, painted c. 1508–1512.
+Yet another very famous panting:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/adam.jpg&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/adam.jpg&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see how our network will deface this painting:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;After &lt;strong&gt;1&lt;/strong&gt; iteration:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/adam-1.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/adam-1.png&#34; style=&#34;margin: 0 auto; display: block; width:60%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;After &lt;strong&gt;20&lt;/strong&gt; iterations:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/adam-20.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/adam-20.png&#34; style=&#34;margin: 0 auto; display: block; width:60%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;After &lt;strong&gt;40&lt;/strong&gt; iterations:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/adam-40.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/adam-40.png&#34; style=&#34;margin: 0 auto; display: block; width:60%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;After &lt;strong&gt;60&lt;/strong&gt; iterations:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/adam-60.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/adam-60.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;other-tests&#34;&gt;Other tests&lt;/h2&gt;
+
+&lt;p&gt;I&amp;rsquo;ve tested the code on many different paintings and photos, I will just include here the two that I liked the most:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/sunflowers.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/sunflowers.png&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/river.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/river.png&#34; style=&#34;margin: 0 auto; display: block; width:60%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;My bet is you will recognize this paintings.&lt;/p&gt;
+
+&lt;h1 id=&#34;summary&#34;&gt;Summary&lt;/h1&gt;
+
+&lt;p&gt;Deep Dream help us understand and visualize how neural networks are able to carry out difficult classification tasks, improve network architecture, and check what the network has learned during training.
+It also makes us wonder whether neural networks could become a tool for artists, a new way to remix visual concepts, or perhaps even shed a little light on the roots of the creative process in general.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>The day I found out my computer does drugs</title>
