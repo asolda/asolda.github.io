@@ -211,7 +211,7 @@ img_height = 128
 
 &lt;p&gt;the image we are getting is this:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/filters.png&#34; alt=&#34;block5_conv1&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/filters.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/filters.png&#34; style=&#34;margin: 0 auto; display: block; width:50%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;We can obviously use this code to visualize different filters for each layer.
 If you do this, you will notice that the first layers basically just encode direction and color.
