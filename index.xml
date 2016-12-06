@@ -6,30 +6,8 @@
     <description>Recent content on Yet another computer science blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 06 Dec 2016 09:29:37 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 05 Dec 2016 14:42:46 +0100</lastBuildDate>
     <atom:link href="https://asolda.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>About me</title>
-      <link>https://asolda.github.io/about/</link>
-      <pubDate>Tue, 06 Dec 2016 09:29:37 +0100</pubDate>
-      
-      <guid>https://asolda.github.io/about/</guid>
-      <description>&lt;p&gt;My name is &lt;strong&gt;Andrea Soldà&lt;/strong&gt;, I am a MD student at &lt;a href=&#34;http://web.unisa.it/home&#34;&gt;University of Salerno&lt;/a&gt;,
-&lt;a href=&#34;http://web.unisa.it/home&#34;&gt;Computer Science Department&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;This is my personal blog, a place that I use to share my interests, my rojects and some cool ideas related to Computer Science and technology.&lt;/p&gt;
-
-&lt;p&gt;I have been a member of the &lt;a href=&#34;www.isislab.it&#34;&gt;ISISLab&lt;/a&gt; and I have partecipated in various projects with professors
-&lt;a href=&#34;http://www.di.unisa.it/~vitsca/&#34;&gt;Vittorio Scarano&lt;/a&gt;, &lt;a href=&#34;http://www.di.unisa.it/~giuper/&#34;&gt;Giuseppe Persiano&lt;/a&gt;, &lt;a href=&#34;http://www.di.unisa.it/~uv/&#34;&gt;Ugo Vaccaro&lt;/a&gt; and many others.&lt;/p&gt;
-
-&lt;p&gt;My main interests are distributed computing/algorithms, software analysis, machine/deep learning.&lt;/p&gt;
-
-&lt;p&gt;You can reach me out at &lt;strong&gt;a.solda92 &lt;em&gt;the-at-symbol&lt;/em&gt; gmail &lt;em&gt;dot&lt;/em&gt; com&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;Some projects&amp;rsquo; sources are available on my &lt;a href=&#34;https://github.com/asolda&#34;&gt;github page&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
     
     <item>
       <title>The day I found out my computer does drugs</title>
