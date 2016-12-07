@@ -6,15 +6,164 @@
     <description>Recent content in Post-rsses on Yet another computer science blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 06 Dec 2016 14:56:57 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 07 Dec 2016 16:00:27 +0100</lastBuildDate>
     <atom:link href="https://asolda.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>An introduction to Deep Learning: part 1</title>
+      <link>https://asolda.github.io/post/deeplearning-1/</link>
+      <pubDate>Wed, 07 Dec 2016 16:00:27 +0100</pubDate>
+      
+      <guid>https://asolda.github.io/post/deeplearning-1/</guid>
+      <description>
+
+&lt;h1 id=&#34;a-hopefully-useful-article&#34;&gt;A hopefully useful article&lt;/h1&gt;
+
+&lt;p&gt;Was about time! This article is meant to be an &lt;strong&gt;introduction to Deep Learning&lt;/strong&gt; for newbies.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Deep Learning&lt;/strong&gt; is a complex topic and often articles and blog posts are meant for people with a base knowledge about such topis;
+This article instead is meant to be an entry point for people who are interested in learn new concepts and to get closer to this subject.&lt;/p&gt;
+
+&lt;h2 id=&#34;from-machine-learning-to-deep-learning&#34;&gt;From Machine Learning to Deep Learning&lt;/h2&gt;
+
+&lt;p&gt;Deep Learning is a branch of machine learning that uses data (&lt;strong&gt;lots&lt;/strong&gt; of data) to teach computers how to do things only humans were capable of before.&lt;/p&gt;
+
+&lt;p&gt;A great example is the problem of perception, recognizing what&amp;rsquo;s in an image, what people are saying when they talk on their phones, helping robots explore the world around them.
+Deep Learning is the state of the art tool to solve perception problem, and there&amp;rsquo;s more to it:
+people are discovering that Deep Learning is extremely useful to solve problems like discovering new medicines, uderstanding natural language, understanding documents (and for example ranking them).&lt;/p&gt;
+
+&lt;p&gt;Many big companies are using Deep Learning in their products and it&amp;rsquo;s easy to uderstand why: Deep Learning shines wherever thare is lots of data and complex problems to solve, and this companies need to solve some of the most complex problems out there (sounds like a cool job right?).&lt;/p&gt;
+
+&lt;p&gt;A lot of the important work on neural networks happened in the 80&amp;rsquo;s and in the 90&amp;rsquo;s but back then computers were slow and datasets very tiny.
+The research didn&amp;rsquo;t really find many applications in the real world, and as a result, in the first decade of the 21st century neural networks have completely disappeared from the world of machine learning.
+It&amp;rsquo;s only in the last few years that neural networks made a big comeback. What changed? &lt;strong&gt;Lots of data&lt;/strong&gt; and &lt;strong&gt;cheap and fast GPU&amp;rsquo;s&lt;/strong&gt;.
+Today, neural networks are &lt;strong&gt;everywhere&lt;/strong&gt;.
+So if you&amp;rsquo;re doing anything with &lt;strong&gt;data&lt;/strong&gt;, &lt;strong&gt;analytics&lt;/strong&gt; or &lt;strong&gt;prediction&lt;/strong&gt;, they&amp;rsquo;re definitely something that you want to get familiar with.&lt;/p&gt;
+
+&lt;p&gt;For this article we will focus on the problem of &lt;strong&gt;classification&lt;/strong&gt;: classification is the task of taking an input (say, a photo of a handwritten letter) and assign it a label (the actual letter).
+Tipically you have a lot of &lt;strong&gt;examples&lt;/strong&gt;, called &amp;ldquo;&lt;strong&gt;Training Set&lt;/strong&gt;&amp;rdquo;, that have already been solved; then you take a complete new example and try to figure out which class it belongs.&lt;/p&gt;
+
+&lt;p&gt;There is much more to Machine Learning than just classification, but once you learn how to classify objects you can build up to amazing things.
+Our aim today is to build a &lt;strong&gt;Logistic classifier&lt;/strong&gt; before moving on to actual Deep Learning.&lt;/p&gt;
+
+&lt;h3 id=&#34;logistic-classifier&#34;&gt;Logistic classifier&lt;/h3&gt;
+
+&lt;p&gt;A Logistic Classifier is what is called a &lt;strong&gt;Linear Classifier&lt;/strong&gt;: it takes the inputs and applyes a linear function to them to generate its prediction.
+The mathematical formulation is:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/1.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:25%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;where the &lt;em&gt;X&lt;/em&gt; variable represents the input (the pixels of an image maybe) and &lt;em&gt;y&lt;/em&gt; is the prediction;
+the linear function is just a giant matrix multiplication: it takes the input as a vector and multiplies it with the &lt;strong&gt;weigth matrix&lt;/strong&gt;.
+The other vector in the equation, &lt;em&gt;b&lt;/em&gt;, is called the &lt;strong&gt;bias vector&lt;/strong&gt;; more on that later.
+&lt;strong&gt;Weigths&lt;/strong&gt; and &lt;strong&gt;bias&lt;/strong&gt; are where the Machine Learning kicks in: we are going to train the model, meaning that we are looking for the values of &lt;em&gt;W&lt;/em&gt; and &lt;em&gt;b&lt;/em&gt; which are &amp;ldquo;good&amp;rdquo; at performing predictions.&lt;/p&gt;
+
+&lt;p&gt;The output will contain &lt;strong&gt;scores&lt;/strong&gt; for each possible class; if the score for a class is higher, then it&amp;rsquo;s likely that the input belongs to that class.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/2.jpeg&#34; style=&#34;margin: 0 auto; display: block; heigth:25%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;However, since an input can only belong to a single class, we need to turn these scores into probabilties.
+In order to do use, we can use a &lt;a href=&#34;https://en.wikipedia.org/wiki/Softmax_function&#34;&gt;Softmax function&lt;/a&gt;.
+What&amp;rsquo;s important to know is that it takes the scores and turn them into probabilities.&lt;/p&gt;
+
+&lt;p&gt;After we apply the Softmax function, we find out that the probability for the right class is higher, and other probabilities are much smaller:
+this help us to represent the outputs in a more practical way using the &lt;strong&gt;One-Hot Encoding&lt;/strong&gt;: we create a new vector where the right class has a value of 1, and all the other values are 0.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/3.jpeg&#34; style=&#34;margin: 0 auto; display: block; heigth:25%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Small recap&lt;/strong&gt;: we start from our input (as a vector), we apply the linear function to obtain scores for each class; we then convert scores to probabilities with a Softmax function and finally we apply one-hot encoding to the resulting vector.&lt;/p&gt;
+
+&lt;p&gt;One-hot encoding works very well with a small number of classes, but whan we have tens of thousands of classes what we get are large vectors filled with 0; not ideal right?
+We can deal with this problem using &lt;strong&gt;embeddings&lt;/strong&gt;, we will eventually get there.&lt;/p&gt;
+
+&lt;p&gt;The good thing about this approach is that we can now mesure how well our model is performing by comparing the output vector with the probabilities and the one-hot vector corresponding to your labels.
+The natural way to measure the distance between two probability vectors is called the &lt;strong&gt;Cross Entropy&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/4.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:37%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;Remember that &lt;em&gt;S&lt;/em&gt; is the vector with our probabilities and &lt;em&gt;L&lt;/em&gt; is the one-hot encoded vector.&lt;/p&gt;
+
+&lt;p&gt;This entire settings is often called &lt;strong&gt;Multinomial Logistic Classification&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now we have all the pieces and the question is: how are we going to find the values for &lt;em&gt;W&lt;/em&gt; and &lt;em&gt;b&lt;/em&gt;?
+We want values such that the distance for the correct class is low, but the distances for the wrong classes are high.&lt;/p&gt;
+
+&lt;p&gt;One thing we can do, is measure this distance averaged over the entire training set:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/5.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:37%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;This is called the &lt;strong&gt;training loss&lt;/strong&gt;; this is a big sum with a large matrix in it, so be careful&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;We want all distances to be small, which means that we are soing a good job at classifying data, so we want out loss to be small.
+The loss is a function of &lt;em&gt;W&lt;/em&gt; and &lt;em&gt;b&lt;/em&gt;, so we are simply trying to minimize this function.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;We have just turned the Machine Learning problem into one of numerical optimization&lt;/strong&gt;. You&amp;rsquo;re welcome.&lt;/p&gt;
+
+&lt;p&gt;There are many ways to solve a numerical optimization problems; a famous one is the &lt;a href=&#34;https://en.wikipedia.org/wiki/Gradient_descent&#34;&gt;Gradient Descent&lt;/a&gt;:
+take the derivative of your loss with respect to the parameters and &amp;ldquo;follow&amp;rdquo; that derivative; repeat until you get to the bottom.&lt;/p&gt;
+
+&lt;p&gt;We need to make a little pause here and talk about &lt;strong&gt;numerical stability&lt;/strong&gt; and &lt;strong&gt;conditioning&lt;/strong&gt;; I will not talk deeply about these aspects, just keep in mind that we want our values to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Have 0 &lt;strong&gt;mean&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Have equal &lt;strong&gt;variance&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is important to improve the performances of our classifier.
+A small &lt;strong&gt;practical examples&lt;/strong&gt; with images: take the pixel values of your image (tipically between 0 and 255) and subtract 128; then divide by 128.
+This doesn&amp;rsquo;t change the content of your image, but it makes much easier to the optimization to proceed numerically.&lt;/p&gt;
+
+&lt;p&gt;Another important factor is how you &lt;strong&gt;initialize&lt;/strong&gt; your weigths and biases.
+An easy and general approach is to initialize the weigths randomly with a &lt;a href=&#34;http://hyperphysics.phy-astr.gsu.edu/hbase/Math/gaufcn.html&#34;&gt;Gaussian distribution&lt;/a&gt; of mean 0 and standard deviation &lt;em&gt;sigma&lt;/em&gt;.
+The &lt;em&gt;sigma&lt;/em&gt; value determines the order of magnitude of your outputs at the initial point of your optimization.
+Because of the soft max on top of it, the order of magnitude also determines the peakiness of your initial probability distribution.
+A &lt;strong&gt;large&lt;/strong&gt; sigma means that your distribution will have large peaks, so it&amp;rsquo;s going to be very opinionated.
+A &lt;strong&gt;small&lt;/strong&gt; sigma means that your distribution is very uncertain about things.
+It&amp;rsquo;s usually better to begin with an &lt;strong&gt;uncertain&lt;/strong&gt; distribution and let the optimization become more confident as the train progress.
+So we will use a small sigma to begin with.&lt;/p&gt;
+
+&lt;p&gt;The bias vector can be initialized with 0.&lt;/p&gt;
+
+&lt;p&gt;We now have everything we need to build a working classifier; let&amp;rsquo;s stick with the images example:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Process&lt;/strong&gt; images: for each pixel, the value &lt;em&gt;v&lt;/em&gt; become (v - 128)/128&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Multiply&lt;/strong&gt; your input and the matrix &lt;em&gt;W&lt;/em&gt; and add the biases&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Apply &lt;strong&gt;Softmax&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Compute the &lt;strong&gt;Cross-Entropy loss&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Calculate tha average of the &lt;strong&gt;Training Loss&lt;/strong&gt; over the entire training data&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Optimization&lt;/strong&gt; process:
+&lt;img src=&#34;https://asolda.github.io/images/formulas/6.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:37%&#34;&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Repeat from step 2&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;end-of-part-one&#34;&gt;End of part one&lt;/h2&gt;
+
+&lt;p&gt;Believe it or not, we have just gone over the essentials things that you need to train a &lt;strong&gt;Linear Classifier&lt;/strong&gt;.
+This works pretty well, but &lt;strong&gt;it can be very slow&lt;/strong&gt;, even for small datasets and for simple models.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Scaling up&lt;/strong&gt; this model is what &lt;strong&gt;Deep Learning&lt;/strong&gt; is all about.&lt;/p&gt;
+
+&lt;p&gt;In this article we have understood what are the mathematical foundations for Machine Learning;
+this is an important step to fully understand what is Deep Learning and, more importantly, what are the problems that you can solve with Deep Learning tecniques.&lt;/p&gt;
+
+&lt;p&gt;In the next part we will understand the differences between Machine and Deep learning and why these models are different.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Bake your own Deep Dream</title>
-      <link>https://asolda.github.io/post/bakedream/</link>
+      <link>https://asolda.github.io/post/deepdream/</link>
       <pubDate>Tue, 06 Dec 2016 14:56:57 +0100</pubDate>
       
-      <guid>https://asolda.github.io/post/bakedream/</guid>
+      <guid>https://asolda.github.io/post/deepdream/</guid>
       <description>
 
 &lt;p&gt;This article is a follow up to &lt;a href=&#34;https://asolda.github.io/post/deepdream/&#34;&gt;this article&lt;/a&gt;; I suggest you check it out before moving on.&lt;/p&gt;
@@ -405,10 +554,10 @@ It also makes us wonder whether neural networks could become a tool for artists,
     
     <item>
       <title>The day I found out my computer does drugs</title>
-      <link>https://asolda.github.io/post/deepdream/</link>
+      <link>https://asolda.github.io/post/convnet/</link>
       <pubDate>Mon, 05 Dec 2016 14:42:46 +0100</pubDate>
       
-      <guid>https://asolda.github.io/post/deepdream/</guid>
+      <guid>https://asolda.github.io/post/convnet/</guid>
       <description>
 
 &lt;h1 id=&#34;exploring-the-unknown&#34;&gt;Exploring the unknown&lt;/h1&gt;
@@ -641,10 +790,10 @@ Guess it&amp;rsquo;s about time someone figures out &lt;strong&gt;why&lt;/strong
     
     <item>
       <title>How Hugo turned me into a blogger wannabe</title>
-      <link>https://asolda.github.io/post/Welcome/</link>
+      <link>https://asolda.github.io/post/hugo-blogger/</link>
       <pubDate>Thu, 01 Dec 2016 15:13:03 +0100</pubDate>
       
-      <guid>https://asolda.github.io/post/Welcome/</guid>
+      <guid>https://asolda.github.io/post/hugo-blogger/</guid>
       <description>
 
 &lt;h1 id=&#34;what-is-this&#34;&gt;What is this?&lt;/h1&gt;

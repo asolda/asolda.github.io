@@ -3,8 +3,8 @@
 
   
   <meta charset="utf-8">
-  <title>The day I found out my computer does drugs</title>
-  <meta name="description" content="The day I found out my computer does drugs">
+  <title>Bake your own Deep Dream</title>
+  <meta name="description" content="Bake your own Deep Dream">
   <meta name="author" content="">
 
   
@@ -69,7 +69,7 @@
 
             <div class="post-title">
                 <p class="footnote">
-                    <time class="">2016-12-05</time>
+                    <time class="">2016-12-06</time>
 		            
                     
                     
@@ -78,243 +78,401 @@
 
                     
                 </p>
-                <h1>The day I found out my computer does drugs</h1>
+                <h1>Bake your own Deep Dream</h1>
             </div>
 
             <div class="post-content">
                 
 
-<h1 id="exploring-the-unknown">Exploring the unknown</h1>
+<p>This article is a follow up to <a href="https://asolda.github.io/post/deepdream/">this article</a>; I suggest you check it out before moving on.</p>
 
-<p>In this article we will talk about <strong>deep convolutional neural network</strong>, a.k.a. how computers are going to rule the world.
-Someday. Eventually. Definetely not right now, mostly because I&rsquo;ve come to the realization that my computer is constantly high on some weird acid.
-More on this later. For now, let&rsquo;s just understand that we are going to talk about complex topics, that this article isn&rsquo;t meant for everyone out there and that I won&rsquo;t have the time to explain everithing I say&hellip;
-I just hope you&rsquo;ll follow through.</p>
+<h1 id="an-article-with-a-purpose">An article with a purpose</h1>
 
-<h2 id="what-are-we-doing">What are we doing?</h2>
+<p><strong>Deep Learning</strong> is, without a doubt, an interesting and fascinating topic.
+It can be applied in many different contexts, from image recognition to text processing;
+companies like Google and Facebook heavily rely on Deep Learning to offer many of their services.</p>
 
-<p>We want to take a look at what deep convolutional neural networks (convnets) really learn, and how they understand the images we feed them.</p>
+<p>However, we are not going to understand how DL can integrate inside business logics; that would be constructive and useful, <em>ergo</em> not suited for this blog.</p>
 
-<p>We will use <a href="https://keras.io/">Keras</a>, a Deep Learning library for <a href="http://deeplearning.net/software/theano/">Theano</a> and <a href="https://www.tensorflow.org/">TensorFlow</a>.</p>
+<p>Instead, we are going to take a deeper look at Google <a href="https://en.wikipedia.org/wiki/DeepDream">Deep Dream</a>,
+aiming to create this hypnotic images by ourself.
+Please note that, jokes aside, this <strong>is</strong> indeed useful, allowing us to better undestand the processes that take place during the classification procedure.</p>
 
-<p><strong>Keras</strong> is a high-level neural networks library, written in Python and capable of running on top of either TensorFlow or Theano.
-It was developed with a focus on enabling fast experimentation, allowing researchers to &ldquo;<em>go from idea to result with the least possible delay</em>&rdquo;.
-It is a really interesting project and can be extremely useful.
-In this post I will be using <strong>Keras</strong> on top of <strong>TensorFlow</strong>, but the code can be seamlessy adapted to work on top of Theano if you prefer.</p>
+<h2 id="tools">Tools</h2>
 
-<p>We will use Keras to visualize inputs that maximize the activation of the filters in different layers of the VGG16 architecture, trained on <a href="http://www.image-net.org/">ImageNet</a>.</p>
+<p>Once again, we are going to use <a href="https://keras.io/">Keras</a> on top of <a href="https://www.tensorflow.org/">TensorFlow</a>,
+to mantain the code readable and to avoid complications.</p>
 
-<h1 id="visualizing-convnet-filters">Visualizing convnet filters</h1>
+<p>We are going to implement our own Deep Dream convnet using the <a href="https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3">pre-trained weights</a> we have already used last time.</p>
 
-<p>VGG16 (also called OxfordNet) is a convolutional neural network architecture named after the <a href="http://www.robots.ox.ac.uk/~vgg/">Visual Geometry Group</a> from Oxford, who developed it.
-It was used to win the <a href="http://www.robots.ox.ac.uk/~vgg/research/very_deep/">ILSVR (ImageNet) competition in 2014</a>.
-To this day is it still considered to be an excellent vision model, although it has been somewhat outperformed by more recent advances (Inception, ResNet).</p>
+<p>The code, however, will be slightly different and we are not reusing the one we wrote last time.</p>
 
-<p><a href="http://www.lorenzobaraldi.com/">Lorenzo Baraldi</a> ported the pre-trained Caffe version of VGG16 (as well as VGG19) to a Keras weights file, so we will just load that to do our experiments. You can download the weight file <a href="https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3">here</a>.</p>
+<h1 id="the-coding-bit">The coding bit</h1>
 
-<p>Loading the model is made easy by Keras:</p>
+<p>First of, we start with a few utilities:</p>
 
-<pre><code># build the VGG16 network with ImageNet weights
-model = vgg16.VGG16(weights='imagenet', include_top=False)
+<pre><code>from __future__ import print_function
+from keras.preprocessing.image import load_img, img_to_array
+import numpy as np
+from scipy.misc import imsave
+from scipy.optimize import fmin_l_bfgs_b
+import time
+import argparse
+
+from keras.applications import vgg16
+from keras import backend as K
+from keras.layers import Input
+
+parser = argparse.ArgumentParser(description='Deep dream implelentation with TensorFlow')
+parser.add_argument('base_image_path', metavar='base', type=str,
+                    help='Path to the image to transform.')
+parser.add_argument('result_prefix', metavar='res_prefix', type=str,
+                    help='Prefix for the saved results.')
+
+args = parser.parse_args()
+base_image_path = args.base_image_path
+result_prefix = args.result_prefix
+
+N_ITER = 100
+
+# dimensions of the generated picture.
+img_width = 450
+img_height = 900
+
+# path to the model weights file.
+weights_path = 'vgg16_weights.h5'
+</code></pre>
+
+<p>These utilities include:</p>
+
+<ul>
+<li><p><code>import</code> statements</p></li>
+
+<li><p><strong>Argument</strong> handling: we expect two parameters, the starting image and a prefix to save the output images</p></li>
+
+<li><p>The maximum number of iterations to perform (<code>N_ITER</code>)</p></li>
+
+<li><p><strong>Dimensions</strong> for the generated images</p></li>
+
+<li><p>The <strong>weights</strong> to use for our network (VGG16)</p></li>
+</ul>
+
+<p>Loading the model is, like last time, pretty straightforward:</p>
+
+<pre><code># this will contain our generated image
+dream = Input(batch_shape=(1,) + img_size)
+
+# build the VGG16 network with our placeholder
+# the model will be loaded with pre-trained ImageNet weights
+model = vgg16.VGG16(input_tensor=dream,
+                    weights='imagenet', include_top=False)
 print('Model loaded.')
 
-model.summary()
+layer_dict = dict([(layer.name, layer) for layer in model.layers])
 </code></pre>
 
-<p>Yup, it&rsquo;s <strong>that</strong> easy. Moving along, we prepare a couple of utilities that we will need later:</p>
+<p>We create a <code>placeholder</code> and we use it as the <code>input_tensor</code> for our network.</p>
+
+<p>The <code>img_size</code> variable is computed this way:</p>
+
+<pre><code>if K.image_dim_ordering() == 'th':
+    img_size = (3, img_width, img_height)
+else:
+    img_size = (img_width, img_height, 3)
+</code></pre>
+
+<p>The <code>dim_ordering</code> can either be &ldquo;tf&rdquo; or &ldquo;th&rdquo;.
+It tells Keras whether to use Theano or TensorFlow dimension ordering for inputs/kernels/ouputs.</p>
+
+<p>We can now write our loss function:</p>
+
+<pre><code># define the loss
+loss = K.variable(0.)
+for layer_name in settings['features']:
+    # add the L2 norm of the features of a layer to the loss
+    assert layer_name in layer_dict.keys(), 'Layer ' + layer_name + ' not found in model.'
+    coeff = settings['features'][layer_name]
+    x = layer_dict[layer_name].output
+    shape = layer_dict[layer_name].output_shape
+    # we avoid border artifacts by only involving non-border pixels in the loss
+    if K.image_dim_ordering() == 'th':
+        loss -= coeff * K.sum(K.square(x[:, :, 2: shape[2] - 2, 2: shape[3] - 2])) / np.prod(shape[1:])
+    else:
+        loss -= coeff * K.sum(K.square(x[:, 2: shape[1] - 2, 2: shape[2] - 2, :])) / np.prod(shape[1:])
+</code></pre>
+
+<p>Next step is applying a couple of tweaks to achieve better results:</p>
 
 <ul>
-<li>A <strong>placeholder</strong> (<a href="https://www.tensorflow.org/versions/r0.12/api_docs/python/io_ops.html">read the doc</a> if you&rsquo;re confused):</li>
+<li><p>A <strong>continuity loss</strong>, to give the image local coherence and avoid messy blurs</p></li>
+
+<li><p>The <strong>L2 norm loss</strong> in order to prevent pixels from taking very high values</p></li>
 </ul>
 
-<pre><code># this is the placeholder for the input images
-input_img = model.input
+<p>Two lines of code will suffice:</p>
+
+<pre><code># add continuity loss
+loss += settings['continuity'] * continuity_loss(dream) / np.prod(img_size)
+# add image L2 norm to loss
+loss += settings['dream_l2'] * K.sum(K.square(dream)) / np.prod(img_size)
 </code></pre>
 
-<ul>
-<li>A <strong>dictionary</strong> that we will use to create <em>ad-hoc</em> loss functions:</li>
-</ul>
+<p>where <code>continuity_loss</code> is a utility function defined by us:</p>
 
-<pre><code># get the symbolic outputs of each &quot;key&quot; layer (we gave them unique names).
-layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+<pre><code># continuity loss util function
+def continuity_loss(x):
+    assert K.ndim(x) == 4
+    if K.image_dim_ordering() == 'th':
+        a = K.square(x[:, :, :img_width - 1, :img_height - 1] -
+                     x[:, :, 1:, :img_height - 1])
+        b = K.square(x[:, :, :img_width - 1, :img_height - 1] -
+                     x[:, :, :img_width - 1, 1:])
+    else:
+        a = K.square(x[:, :img_width - 1, :img_height-1, :] -
+                     x[:, 1:, :img_height - 1, :])
+        b = K.square(x[:, :img_width - 1, :img_height-1, :] -
+                     x[:, :img_width - 1, 1:, :])
+    return K.sum(K.pow(a + b, 1.25))
 </code></pre>
 
-<ul>
-<li>A utility function to <strong>normalize</strong> a Tensor (using its L2 Norm)</li>
-</ul>
+<p>Our model is now complete.
+You can feel free to further modify the loss as you see fit, to achieve new effects.</p>
 
-<pre><code>def normalize(x):
-    return x / (K.sqrt(K.mean(K.square(x))) + 1e-5)
+<p>Now things can get a little bit trickier:
+we need to evaluate our loss and our gradients in one pass, but <code>scipy.optimize</code> requires separate functions for loss and gradients,
+and computing them separately would be inefficient.
+To solve this we create our own <code>Evaluator</code>:</p>
+
+<pre><code>class Evaluator(object):
+    def __init__(self):
+        self.loss_value = None
+        self.grad_values = None
+
+    def loss(self, x):
+        assert self.loss_value is None
+        loss_value, grad_values = eval_loss_and_grads(x)
+        self.loss_value = loss_value
+        self.grad_values = grad_values
+        return self.loss_value
+
+    def grads(self, x):
+        assert self.loss_value is not None
+        grad_values = np.copy(self.grad_values)
+        self.loss_value = None
+        self.grad_values = None
+        return grad_values
+
+evaluator = Evaluator()
 </code></pre>
 
-<p>Moving to the interesting part of the code, it&rsquo;s now time to scan through the filters, compute the loss functions and visualize the most interesting filters.
-The scanning process is pretty straightforward:</p>
+<p>The <code>eval_loss_and_grads</code> functions will then read as follow:</p>
 
-<pre><code>kept_filters = []
-for filter_index in range(0, 200):
-    # we only scan through the first 200 filters,
-    # but there are more (512)
-    print('Processing filter %d' % filter_index)
+<pre><code># compute the gradients of the dream wrt the loss
+grads = K.gradients(loss, dream)
+
+outputs = [loss]
+if type(grads) in {list, tuple}:
+    outputs += grads
+else:
+    outputs.append(grads)
+
+f_outputs = K.function([dream], outputs)
+def eval_loss_and_grads(x):
+    x = x.reshape((1,) + img_size)
+    outs = f_outputs([x])
+    loss_value = outs[0]
+    if len(outs[1:]) == 1:
+        grad_values = outs[1].flatten().astype('float64')
+    else:
+        grad_values = np.array(outs[1:]).flatten().astype('float64')
+    return loss_value, grad_values
+</code></pre>
+
+<p>All that&rsquo;s left now is to run <a href="https://en.wikipedia.org/wiki/Limited-memory_BFGS">L-BFGS</a> optimizer over the pixels of the generated image,
+in order to minimize the loss:</p>
+
+<pre><code>x = preprocess_image(base_image_path)
+for i in range(N_ITER):
+    print('Start of iteration', i)
     start_time = time.time()
 
-    # we build a loss function that maximizes the activation
-    # of the nth filter of the layer considered
-    layer_output = layer_dict[layer_name].output
-    if K.image_dim_ordering() == 'th':
-        loss = K.mean(layer_output[:, filter_index, :, :])
-    else:
-        loss = K.mean(layer_output[:, :, :, filter_index])
+    # add a random jitter to the initial image. This will be reverted at decoding time
+    random_jitter = (settings['jitter'] * 2) * (np.random.random(img_size) - 0.5)
+    x += random_jitter
 
-    # we compute the gradient of the input picture wrt this loss
-    grads = K.gradients(loss, input_img)[0]
-
-    # normalization trick: we normalize the gradient
-    grads = normalize(grads)
-
-    # this function returns the loss and grads given the input picture
-    iterate = K.function([input_img], [loss, grads])
-
-    # step size for gradient ascent
-    step = 1.
-
-    # we start from a gray image with some random noise
-    if K.image_dim_ordering() == 'th':
-        input_img_data = np.random.random((1, 3, img_width, img_height))
-    else:
-        input_img_data = np.random.random((1, img_width, img_height, 3))
-    input_img_data = (input_img_data - 0.5) * 20 + 128
-
-    # we run gradient ascent for 20 steps
-    for i in range(20):
-        loss_value, grads_value = iterate([input_img_data])
-        input_img_data += grads_value * step
-
-        print('Current loss value:', loss_value)
-        if loss_value &lt;= 0.:
-            # some filters get stuck to 0, we can skip them
-            break
-
-    # decode the resulting input image
-    if loss_value &gt; 0:
-        img = deprocess_image(input_img_data[0])
-        kept_filters.append((img, loss_value))
+    # run L-BFGS for 7 steps
+    x, min_val, info = fmin_l_bfgs_b(evaluator.loss, x.flatten(),
+                                     fprime=evaluator.grads, maxfun=7)
+    print('Current loss value:', min_val)
+    # decode the dream and save it
+    x = x.reshape(img_size)
+    x -= random_jitter
+    img = deprocess_image(np.copy(x))
+    fname = result_prefix + '_at_iteration_%d.png' % i
+    imsave(fname, img)
     end_time = time.time()
-    print('Filter %d processed in %ds' % (filter_index, end_time - start_time))
+    print('Image saved as', fname)
+    print('Iteration %d completed in %ds' % (i, end_time - start_time))
 </code></pre>
 
-<p>The code is well commented and Keras makes everything extremely linear and readable.
-Just a couple of notes:</p>
+<p>What are we missing? Just a couple of utility functions and a custom configuration (the <code>settings</code> variable) for our network:</p>
 
 <ul>
-<li><p>The <code>loss function</code> is easy, but effective for our purpose.</p></li>
-
-<li><p>The &ldquo;<em>normalization trick</em>&rdquo; is worth pointing out, start your research from <a href="http://stats.stackexchange.com/questions/22568/difference-in-using-normalized-gradient-and-gradient">here</a> if you are interested.</p></li>
-
-<li><p>The <code>deprocess_image</code> function can be a little bit tricky, but here you are:</p></li>
+<li>Here are the functions <code>preprocess_image</code> and <code>deprocess_image</code>:</li>
 </ul>
 
-<pre><code># util function to convert a tensor into a valid image
+<pre><code># util function to open, resize and format pictures into appropriate tensors
+def preprocess_image(image_path):
+    img = load_img(image_path, target_size=(img_width, img_height))
+    img = img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    img = vgg16.preprocess_input(img)
+    return img
+
+# util function to convert a tensor into a valid image
 def deprocess_image(x):
-    # normalize tensor: center on 0., ensure std is 0.1
-    x -= x.mean()
-    x /= (x.std() + 1e-5)
-    x *= 0.1
-
-    # clip to [0, 1]
-    x += 0.5
-    x = np.clip(x, 0, 1)
-
-    # convert to RGB array
-    x *= 255
     if K.image_dim_ordering() == 'th':
+        x = x.reshape((3, img_width, img_height))
         x = x.transpose((1, 2, 0))
+    else:
+        x = x.reshape((img_width, img_height, 3))
+    # Remove zero-center by mean pixel
+    x[:, :, 0] += 103.939
+    x[:, :, 1] += 116.779
+    x[:, :, 2] += 123.68
+    # 'BGR'-&gt;'RGB'
+    x = x[:, :, ::-1]
     x = np.clip(x, 0, 255).astype('uint8')
     return x
 </code></pre>
 
 <ul>
-<li>The <code>layer_name</code> variable should look like this:</li>
+<li>Next up, a couple of example settings that I like:</li>
 </ul>
 
-<pre><code># the name of the layer we want to visualize
-# (see model definition at keras/applications/vgg16.py)
-layer_name = 'block5_conv1'
+<pre><code>saved_settings = {
+    'acid': {'features': {'block4_conv1': 0.05,
+                              'block4_conv2': 0.01,
+                              'block4_conv3': 0.01},
+                 'continuity': 0.1,
+                 'dream_l2': 0.8,
+                 'jitter': 5},
+    'doggos': {'features': {'block5_conv1': 0.05,
+                            'block5_conv2': 0.02},
+               'continuity': 0.1,
+               'dream_l2': 0.02,
+               'jitter': 0},
+}
+
+# the settings we will use in this experiment
+settings = saved_settings['doggos']
 </code></pre>
 
-<p>We can now move on to select the &ldquo;best&rdquo; layers;
-the filters that have the highest loss are supposed to be the best looking:</p>
+<p>The results that I&rsquo;ll show below are obtained with the <code>doggos</code> setting.</p>
 
-<pre><code># we will stich the best 64 filters on a 8 x 8 grid.
-n = 8
+<h1 id="the-fun-part">The fun part</h1>
 
-# we will only keep the top 64 filters.
-kept_filters.sort(key=lambda x: x[1], reverse=True)
-kept_filters = kept_filters[:n * n]
+<p>To test our model I&rsquo;ve chosen famous paintings and I&rsquo;ve run the code above for an &ldquo;appropriate&rdquo; number of iterations.
+I usually prefer images where you can recognize both the original painting and the network&rsquo;s work.</p>
 
-# build a black picture with enough space for
-# our 8 x 8 filters of size 128 x 128, with a 5px margin in between
-margin = 5
-width = n * img_width + (n - 1) * margin
-height = n * img_height + (n - 1) * margin
-stitched_filters = np.zeros((width, height, 3))
+<h2 id="input-1-nascita-di-venere">Input 1: Nascita di Venere</h2>
 
-# fill the picture with our saved filters
-for i in range(n):
-    for j in range(n):
-        img, loss = kept_filters[i * n + j]
-        stitched_filters[(img_width + margin) * i: (img_width + margin) * i + img_width,
-                         (img_height + margin) * j: (img_height + margin) * j + img_height, :] = img
+<p>The <em><a href="https://en.wikipedia.org/wiki/The_Birth_of_Venus">Birth if Venus</a></em> is a painting by Sandro Botticelli generally thought to have been painted in the mid 1480s.
+This is an iconic and easily recognizable painting:</p>
 
-# save the result to disk
-imsave('stitched_filters_%dx%d.png' % (n, n), stitched_filters)
-</code></pre>
+<p><a href="/images/venus.jpg"><img src="/images/venus.jpg" style="margin: 0 auto; display: block; width:75%"></a></p>
 
-<p>With</p>
+<p>Here are the results after various number of iterations:</p>
 
-<pre><code># dimensions of the generated pictures for each filter.
-img_width = 128
-img_height = 128
-</code></pre>
+<ul>
+<li>After <strong>1</strong> iteration</li>
+</ul>
 
-<p>the image we are getting is this:</p>
+<p><a href="/images/venus-1.png"><img src="/images/venus-1.png" style="margin: 0 auto; display: block; width:60%"></a></p>
 
-<p><a href="/images/filters.png"><img src="/images/filters.png" style="margin: 0 auto; display: block; width:50%"></a></p>
+<p>The painting is clearly there, almost untouched, but you can already see that weird images are forming.</p>
 
-<p>We can obviously use this code to visualize different filters for each layer.
-If you do this, you will notice that the first layers basically just encode direction and color.
-These direction and color filters then get combined into basic grid and spot textures.
-These textures gradually get combined into increasingly complex patterns.</p>
+<ul>
+<li>After <strong>5</strong> iterations</li>
+</ul>
 
-<p>In the highest layers (like the one above) we start to recognize textures similar to that found in the objects that network was trained to classify, such as feathers, eyes, etc.</p>
+<p><a href="/images/venus-5.png"><img src="/images/venus-5.png" style="margin: 0 auto; display: block; width:60%"></a></p>
 
-<p>Another fun thing to do is to apply these filters to photos (rather than to noisy all-gray inputs).
-This is the principle of <a href="https://en.wikipedia.org/wiki/DeepDream">Deep Dreams</a>, popularized by Google last year.</p>
+<ul>
+<li>After <strong>10</strong> iterations</li>
+</ul>
 
-<p>We will learn how to implement Deep Dream in the next article, in the meanwhile you can have fun visualizing different layers and using photos as a starting point for filters visualization.</p>
+<p><a href="/images/venus-10.png"><img src="/images/venus-10.png" style="margin: 0 auto; display: block; width:60%"></a></p>
+
+<p>Here the painting has been heavily modified, and you can recognize animals that the network was trained to recognize.</p>
+
+<ul>
+<li>After <strong>20</strong> iterations</li>
+</ul>
+
+<p><a href="/images/venus-20.png"><img src="/images/venus-20.png" style="margin: 0 auto; display: block; width:60%"></a></p>
+
+<ul>
+<li>And finally, after <strong>25</strong> iterations</li>
+</ul>
+
+<p><a href="/images/venus-25.png"><img src="/images/venus-25.png" style="margin: 0 auto; display: block; width:75%"></a></p>
+
+<p>This is the point where I like it the most, but it&rsquo;s a matter of personal test and you can perform as many iterations as you like.</p>
+
+<h2 id="input-2-creazione-di-adamo">Input 2: Creazione di Adamo</h2>
+
+<p>The <a href="https://en.wikipedia.org/wiki/The_Creation_of_Adam">Creation of Adam</a> is a fresco painting by Michelangelo, which forms part of the Sistine Chapel&rsquo;s ceiling, painted c. 1508–1512.
+Yet another very famous panting:</p>
+
+<p><a href="/images/adam.jpg"><img src="/images/adam.jpg" style="margin: 0 auto; display: block; width:75%"></a></p>
+
+<p>Let&rsquo;s see how our network will deface this painting:</p>
+
+<ul>
+<li>After <strong>1</strong> iteration:</li>
+</ul>
+
+<p><a href="/images/adam-1.png"><img src="/images/adam-1.png" style="margin: 0 auto; display: block; width:60%"></a></p>
+
+<ul>
+<li>After <strong>20</strong> iterations:</li>
+</ul>
+
+<p><a href="/images/adam-20.png"><img src="/images/adam-20.png" style="margin: 0 auto; display: block; width:60%"></a></p>
+
+<ul>
+<li>After <strong>40</strong> iterations:</li>
+</ul>
+
+<p><a href="/images/adam-40.png"><img src="/images/adam-40.png" style="margin: 0 auto; display: block; width:60%"></a></p>
+
+<ul>
+<li>After <strong>60</strong> iterations:</li>
+</ul>
+
+<p><a href="/images/adam-60.png"><img src="/images/adam-60.png" style="margin: 0 auto; display: block; width:75%"></a></p>
+
+<h2 id="other-tests">Other tests</h2>
+
+<p>I&rsquo;ve tested the code on many different paintings and photos, I will just include here the two that I liked the most:</p>
+
+<p><a href="/images/sunflowers.png"><img src="/images/sunflowers.png" style="margin: 0 auto; display: block; width:33%"></a></p>
+
+<p><a href="/images/river.png"><img src="/images/river.png" style="margin: 0 auto; display: block; width:60%"></a></p>
+
+<p>My bet is you will recognize this paintings.</p>
 
 <h1 id="summary">Summary</h1>
 
-<p>The key message here is that <strong>convnets don&rsquo;t understand concepts</strong> just because thay are able to classify objects.
-The visual decomposition of visual space learned by a convnet is (apparently) analogous to what the human visual cortex does.
-It may or may not be true. So what do they understand? Basically two things:</p>
-
-<ul>
-<li><p>They understand a <strong>decomposition of their visual input space</strong> as a hierarchical-modular network of convolution filters.</p></li>
-
-<li><p>They understand a <strong>probabilitistic mapping between certain combinations of these filters</strong> and a set of arbitrary labels.</p></li>
-</ul>
-
-<p>Naturally, this does not qualify as &ldquo;seeing&rdquo; in any human sense, and it doesn&rsquo;t mean we have solved computer vision.</p>
-
-<p>That said, visualizing what convnets learn is quite fascinating.
-Deep learning may not be intelligence in any real sense, but it&rsquo;s still working considerably better than anybody could have anticipated just a few years ago.
-Guess it&rsquo;s about time someone figures out <strong>why</strong>&hellip;</p>
+<p>Deep Dream help us understand and visualize how neural networks are able to carry out difficult classification tasks, improve network architecture, and check what the network has learned during training.
+It also makes us wonder whether neural networks could become a tool for artists, a new way to remix visual concepts, or perhaps even shed a little light on the roots of the creative process in general.</p>
 
                 <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'asolda-github-io';
     var disqus_identifier = 'https:\/\/asolda.github.io\/post\/deepdream\/';
-    var disqus_title = 'The day I found out my computer does drugs';
+    var disqus_title = 'Bake your own Deep Dream';
     var disqus_url = 'https:\/\/asolda.github.io\/post\/deepdream\/';
 
     (function() {

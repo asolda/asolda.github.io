@@ -1,0 +1,295 @@
+<html lang="en">
+<head>
+
+  
+  <meta charset="utf-8">
+  <title>An introduction to Deep Learning: part 1</title>
+  <meta name="description" content="An introduction to Deep Learning: part 1">
+  <meta name="author" content="">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://asolda.github.io/css/fonts.css">
+  
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+  
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+
+  <link rel="stylesheet" href="https://asolda.github.io/css/custom.css">
+
+  
+  
+  <link rel="stylesheet" href="https://asolda.github.io/highlight/styles/default.css">
+  
+  <script src="https://asolda.github.io/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+
+
+<div class="header pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+    <div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="desktop pure-menu pure-menu-horizontal nav-menu">
+            
+            <a href="https://asolda.github.io/" class="site-title pure-menu-heading">Yet another computer science blog</a>
+            <ul class="pure-menu-list">
+                
+                <li class="pure-menu-item">
+                    <a href="https://asolda.github.io/about/" class="pure-menu-link">About</a>
+                </li>
+            </ul>
+        </div>
+        <div class="mobile pure-menu nav-menu">
+            <a href="/" class="pure-menu-heading" id="toggle-home">Yet another computer science blog</a>
+            <a href="#" id="toggle-btn">&#9776;</a>
+            <ul class="pure-menu-list" id="toggle-content" style="display:none;">
+                
+                
+                <li class="pure-menu-item">
+                    <a href="https://asolda.github.io/about" class="pure-menu-link">About</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+
+<div class="pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+	<div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="post">
+
+            <div class="post-title">
+                <p class="footnote">
+                    <time class="">2016-12-07</time>
+		            
+                    
+                    
+
+                    
+
+                    
+                </p>
+                <h1>An introduction to Deep Learning: part 1</h1>
+            </div>
+
+            <div class="post-content">
+                
+
+<h1 id="a-hopefully-useful-article">A hopefully useful article</h1>
+
+<p>Was about time! This article is meant to be an <strong>introduction to Deep Learning</strong> for newbies.</p>
+
+<p><strong>Deep Learning</strong> is a complex topic and often articles and blog posts are meant for people with a base knowledge about such topis;
+This article instead is meant to be an entry point for people who are interested in learn new concepts and to get closer to this subject.</p>
+
+<h2 id="from-machine-learning-to-deep-learning">From Machine Learning to Deep Learning</h2>
+
+<p>Deep Learning is a branch of machine learning that uses data (<strong>lots</strong> of data) to teach computers how to do things only humans were capable of before.</p>
+
+<p>A great example is the problem of perception, recognizing what&rsquo;s in an image, what people are saying when they talk on their phones, helping robots explore the world around them.
+Deep Learning is the state of the art tool to solve perception problem, and there&rsquo;s more to it:
+people are discovering that Deep Learning is extremely useful to solve problems like discovering new medicines, uderstanding natural language, understanding documents (and for example ranking them).</p>
+
+<p>Many big companies are using Deep Learning in their products and it&rsquo;s easy to uderstand why: Deep Learning shines wherever thare is lots of data and complex problems to solve, and this companies need to solve some of the most complex problems out there (sounds like a cool job right?).</p>
+
+<p>A lot of the important work on neural networks happened in the 80&rsquo;s and in the 90&rsquo;s but back then computers were slow and datasets very tiny.
+The research didn&rsquo;t really find many applications in the real world, and as a result, in the first decade of the 21st century neural networks have completely disappeared from the world of machine learning.
+It&rsquo;s only in the last few years that neural networks made a big comeback. What changed? <strong>Lots of data</strong> and <strong>cheap and fast GPU&rsquo;s</strong>.
+Today, neural networks are <strong>everywhere</strong>.
+So if you&rsquo;re doing anything with <strong>data</strong>, <strong>analytics</strong> or <strong>prediction</strong>, they&rsquo;re definitely something that you want to get familiar with.</p>
+
+<p>For this article we will focus on the problem of <strong>classification</strong>: classification is the task of taking an input (say, a photo of a handwritten letter) and assign it a label (the actual letter).
+Tipically you have a lot of <strong>examples</strong>, called &ldquo;<strong>Training Set</strong>&rdquo;, that have already been solved; then you take a complete new example and try to figure out which class it belongs.</p>
+
+<p>There is much more to Machine Learning than just classification, but once you learn how to classify objects you can build up to amazing things.
+Our aim today is to build a <strong>Logistic classifier</strong> before moving on to actual Deep Learning.</p>
+
+<h3 id="logistic-classifier">Logistic classifier</h3>
+
+<p>A Logistic Classifier is what is called a <strong>Linear Classifier</strong>: it takes the inputs and applyes a linear function to them to generate its prediction.
+The mathematical formulation is:</p>
+
+<p><img src="/images/formulas/1.jpeg" style="margin: 0 auto; display: block; width:25%"></p>
+
+<p>where the <em>X</em> variable represents the input (the pixels of an image maybe) and <em>y</em> is the prediction;
+the linear function is just a giant matrix multiplication: it takes the input as a vector and multiplies it with the <strong>weigth matrix</strong>.
+The other vector in the equation, <em>b</em>, is called the <strong>bias vector</strong>; more on that later.
+<strong>Weigths</strong> and <strong>bias</strong> are where the Machine Learning kicks in: we are going to train the model, meaning that we are looking for the values of <em>W</em> and <em>b</em> which are &ldquo;good&rdquo; at performing predictions.</p>
+
+<p>The output will contain <strong>scores</strong> for each possible class; if the score for a class is higher, then it&rsquo;s likely that the input belongs to that class.</p>
+
+<p><img src="/images/formulas/2.jpeg" style="margin: 0 auto; display: block; heigth:25%"></p>
+
+<p>However, since an input can only belong to a single class, we need to turn these scores into probabilties.
+In order to do use, we can use a <a href="https://en.wikipedia.org/wiki/Softmax_function">Softmax function</a>.
+What&rsquo;s important to know is that it takes the scores and turn them into probabilities.</p>
+
+<p>After we apply the Softmax function, we find out that the probability for the right class is higher, and other probabilities are much smaller:
+this help us to represent the outputs in a more practical way using the <strong>One-Hot Encoding</strong>: we create a new vector where the right class has a value of 1, and all the other values are 0.</p>
+
+<p><img src="/images/formulas/3.jpeg" style="margin: 0 auto; display: block; heigth:25%"></p>
+
+<p><strong>Small recap</strong>: we start from our input (as a vector), we apply the linear function to obtain scores for each class; we then convert scores to probabilities with a Softmax function and finally we apply one-hot encoding to the resulting vector.</p>
+
+<p>One-hot encoding works very well with a small number of classes, but whan we have tens of thousands of classes what we get are large vectors filled with 0; not ideal right?
+We can deal with this problem using <strong>embeddings</strong>, we will eventually get there.</p>
+
+<p>The good thing about this approach is that we can now mesure how well our model is performing by comparing the output vector with the probabilities and the one-hot vector corresponding to your labels.
+The natural way to measure the distance between two probability vectors is called the <strong>Cross Entropy</strong>:</p>
+
+<p><img src="/images/formulas/4.jpeg" style="margin: 0 auto; display: block; width:37%"></p>
+
+<p>Remember that <em>S</em> is the vector with our probabilities and <em>L</em> is the one-hot encoded vector.</p>
+
+<p>This entire settings is often called <strong>Multinomial Logistic Classification</strong>.</p>
+
+<p>Now we have all the pieces and the question is: how are we going to find the values for <em>W</em> and <em>b</em>?
+We want values such that the distance for the correct class is low, but the distances for the wrong classes are high.</p>
+
+<p>One thing we can do, is measure this distance averaged over the entire training set:</p>
+
+<p><img src="/images/formulas/5.jpeg" style="margin: 0 auto; display: block; width:37%"></p>
+
+<p>This is called the <strong>training loss</strong>; this is a big sum with a large matrix in it, so be careful&hellip;</p>
+
+<p>We want all distances to be small, which means that we are soing a good job at classifying data, so we want out loss to be small.
+The loss is a function of <em>W</em> and <em>b</em>, so we are simply trying to minimize this function.</p>
+
+<p><strong>We have just turned the Machine Learning problem into one of numerical optimization</strong>. You&rsquo;re welcome.</p>
+
+<p>There are many ways to solve a numerical optimization problems; a famous one is the <a href="https://en.wikipedia.org/wiki/Gradient_descent">Gradient Descent</a>:
+take the derivative of your loss with respect to the parameters and &ldquo;follow&rdquo; that derivative; repeat until you get to the bottom.</p>
+
+<p>We need to make a little pause here and talk about <strong>numerical stability</strong> and <strong>conditioning</strong>; I will not talk deeply about these aspects, just keep in mind that we want our values to:</p>
+
+<ul>
+<li><p>Have 0 <strong>mean</strong></p></li>
+
+<li><p>Have equal <strong>variance</strong></p></li>
+</ul>
+
+<p>This is important to improve the performances of our classifier.
+A small <strong>practical examples</strong> with images: take the pixel values of your image (tipically between 0 and 255) and subtract 128; then divide by 128.
+This doesn&rsquo;t change the content of your image, but it makes much easier to the optimization to proceed numerically.</p>
+
+<p>Another important factor is how you <strong>initialize</strong> your weigths and biases.
+An easy and general approach is to initialize the weigths randomly with a <a href="http://hyperphysics.phy-astr.gsu.edu/hbase/Math/gaufcn.html">Gaussian distribution</a> of mean 0 and standard deviation <em>sigma</em>.
+The <em>sigma</em> value determines the order of magnitude of your outputs at the initial point of your optimization.
+Because of the soft max on top of it, the order of magnitude also determines the peakiness of your initial probability distribution.
+A <strong>large</strong> sigma means that your distribution will have large peaks, so it&rsquo;s going to be very opinionated.
+A <strong>small</strong> sigma means that your distribution is very uncertain about things.
+It&rsquo;s usually better to begin with an <strong>uncertain</strong> distribution and let the optimization become more confident as the train progress.
+So we will use a small sigma to begin with.</p>
+
+<p>The bias vector can be initialized with 0.</p>
+
+<p>We now have everything we need to build a working classifier; let&rsquo;s stick with the images example:</p>
+
+<ol>
+<li><p><strong>Process</strong> images: for each pixel, the value <em>v</em> become (v - 128)/128</p></li>
+
+<li><p><strong>Multiply</strong> your input and the matrix <em>W</em> and add the biases</p></li>
+
+<li><p>Apply <strong>Softmax</strong></p></li>
+
+<li><p>Compute the <strong>Cross-Entropy loss</strong></p></li>
+
+<li><p>Calculate tha average of the <strong>Training Loss</strong> over the entire training data</p></li>
+
+<li><p><strong>Optimization</strong> process:
+<img src="/images/formulas/6.jpeg" style="margin: 0 auto; display: block; width:37%"></p></li>
+
+<li><p>Repeat from step 2</p></li>
+</ol>
+
+<h2 id="end-of-part-one">End of part one</h2>
+
+<p>Believe it or not, we have just gone over the essentials things that you need to train a <strong>Linear Classifier</strong>.
+This works pretty well, but <strong>it can be very slow</strong>, even for small datasets and for simple models.</p>
+
+<p><strong>Scaling up</strong> this model is what <strong>Deep Learning</strong> is all about.</p>
+
+<p>In this article we have understood what are the mathematical foundations for Machine Learning;
+this is an important step to fully understand what is Deep Learning and, more importantly, what are the problems that you can solve with Deep Learning tecniques.</p>
+
+<p>In the next part we will understand the differences between Machine and Deep learning and why these models are different.</p>
+
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'asolda-github-io';
+    var disqus_identifier = 'https:\/\/asolda.github.io\/post\/deeplearning-1\/';
+    var disqus_title = 'An introduction to Deep Learning: part 1';
+    var disqus_url = 'https:\/\/asolda.github.io\/post\/deeplearning-1\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+	</div>
+    <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+<div class="footer pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+    <div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="pure-menu pure-menu-horizontal footer-content">
+            <ul>
+                <li class="pure-menu-heading" id="foot-name">:</li>
+
+                
+
+                
+
+                
+
+                
+
+                
+
+            </ul>
+            <a href="#" class="pure-menu-heading pull-right" id="gototop-btn">↑↑</a>
+        </div>
+	  </div>
+      <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+
+<script src="https://asolda.github.io/js/jquery.min.js" type="text/javascript"></script>
+<script src="https://asolda.github.io/js/jquery.timeago.js" type="text/javascript"></script>
+<script type="text/javascript">
+  $(function(){
+    $("time.timeago").timeago();
+  })
+  $("#toggle-btn").click(function(){
+    $("#toggle-content").toggle();
+    if($(this).html() === "☰") {
+        $(this).html("X")
+    } else {
+        $(this).html("☰")
+    }
+  });
+  $(window).resize(function(){
+    if(window.innerWidth > 768) {
+      $(".desktop").removeAttr("style");
+    }
+  });
+</script>
+
+</body>
+</html>
+

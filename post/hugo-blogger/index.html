@@ -1,0 +1,445 @@
+<html lang="en">
+<head>
+
+  
+  <meta charset="utf-8">
+  <title>How Hugo turned me into a blogger wannabe</title>
+  <meta name="description" content="How Hugo turned me into a blogger wannabe">
+  <meta name="author" content="">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://asolda.github.io/css/fonts.css">
+  
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+  
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+
+  <link rel="stylesheet" href="https://asolda.github.io/css/custom.css">
+
+  
+  
+  <link rel="stylesheet" href="https://asolda.github.io/highlight/styles/default.css">
+  
+  <script src="https://asolda.github.io/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+
+
+<div class="header pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+    <div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="desktop pure-menu pure-menu-horizontal nav-menu">
+            
+            <a href="https://asolda.github.io/" class="site-title pure-menu-heading">Yet another computer science blog</a>
+            <ul class="pure-menu-list">
+                
+                <li class="pure-menu-item">
+                    <a href="https://asolda.github.io/about/" class="pure-menu-link">About</a>
+                </li>
+            </ul>
+        </div>
+        <div class="mobile pure-menu nav-menu">
+            <a href="/" class="pure-menu-heading" id="toggle-home">Yet another computer science blog</a>
+            <a href="#" id="toggle-btn">&#9776;</a>
+            <ul class="pure-menu-list" id="toggle-content" style="display:none;">
+                
+                
+                <li class="pure-menu-item">
+                    <a href="https://asolda.github.io/about" class="pure-menu-link">About</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+
+<div class="pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+	<div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="post">
+
+            <div class="post-title">
+                <p class="footnote">
+                    <time class="">2016-12-01</time>
+		            
+                    
+                    
+
+                    
+
+                    
+                </p>
+                <h1>How Hugo turned me into a blogger wannabe</h1>
+            </div>
+
+            <div class="post-content">
+                
+
+<h1 id="what-is-this">What is this?</h1>
+
+<p>I have decided to finally start a blog. This is just a welcome message (mostly realized to test Hugo, Github Pages and a few themes).
+In this blog I will talk about the project I work on in my free time; topics range from machine/deep learning to social network analysis, distributed computing and more.
+Some projects are my own ideas, others are the result of me playing with coll stuff you find around the web.
+This first article is about the technical details behind the blog itself, what technologies I&rsquo;m using, how I&rsquo;ve set up my workflow and how hugo convinced me to start this.</p>
+
+<h1 id="about-this-article">About this article</h1>
+
+<p>This is supposed to be a technical blog, a safe shelter for computer scientists and alikes.
+How I am developing this blog can be interesting and usefull for other people who want to share their projects and their knowledge.
+The idea here is to give you an overview of how I am developing and updating the blog from a technical perspective.</p>
+
+<h2 id="resources">Resources</h2>
+
+<p><a href="https://gohugo.io/">Hugo</a>, alongside <a href="https://pages.github.com/">Github Pages</a>, are the main reasons why I have finally decided to start this project.</p>
+
+<p><strong>Hugo</strong> is &ldquo;<em>a fast and modern static website engine</em>&rdquo;. That is, a <strong>HUGE</strong> help when you want to just write your thoughs, without worrying about themes, styles, and general web-development-related issues.
+It is easy to install and configure (short tutorial is down the road), light, fast (gotta love <a href="https://golang.org/">go</a>), open source&hellip; I could go on for miles.
+There are downsides and negative aspects too, but the moment you realize what Hugo is meant for you also realize that negative aspects turn into features; you will realize this in a few weeks of usage.</p>
+
+<p><strong>Github Pages</strong> allows you to create and publish websites for your projects, as well as personal blogs or portfolios.
+The code for you site is hosted directly from your GitHub repository. Just edit, push, and your changes are live.</p>
+
+<p>The way Hugo and Github Pages interact is mesmerizing; this instruments team up for a produtictivity boost comparable to the introductions of rounded wheels over squared ones.
+Damn, you gotta love this things; and to bring you on board with me, let&rsquo;s dive into a tutorial on how to setup this workflow.</p>
+
+<p>Please note that I will assume that you already use git. In case you don&rsquo;t, <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">here you are</a> (and you&rsquo;re a bad person).</p>
+
+<h1 id="let-s-start-the-party">Let&rsquo;s start the party</h1>
+
+<h2 id="step-0-install-and-configure-hugo">Step 0: Install and configure Hugo</h2>
+
+<p>You only need to follow this steps the first time you use Hugo. Since it is written in go, it supports multiple platforms and comes in pre-built binaries available <a href="https://github.com/spf13/hugo/releases">here</a>.</p>
+
+<p>A complete installation guide is available <a href="https://gohugo.io/overview/installing/">here</a>.</p>
+
+<p>If you&rsquo;re on a Mac, I advice you install <a href="http://brew.sh/">Homebrew</a> and just <code>brew install hugo</code>.</p>
+
+<h3 id="before-you-start">Before you start</h3>
+
+<p>If you haven&rsquo;t already done that, check that Hugo is correctly configured by running</p>
+
+<pre><code>hugo help
+</code></pre>
+
+<p>You should see something like</p>
+
+<pre><code>hugo is the main command, used to build your Hugo site.
+
+Hugo is a Fast and Flexible Static Site Generator
+built with love by spf13 and friends in Go.
+
+Complete documentation is available at http://gohugo.io/.
+
+Usage:
+  hugo [flags]
+  hugo [command]
+  ...
+</code></pre>
+
+<p>It goes on for a while.</p>
+
+<h2 id="step-1-create-your-first-hugo-project">Step 1: Create your first Hugo project</h2>
+
+<p>In this short example we will create a blog.</p>
+
+<p>Hugo has a large set of commands to manage your website. To create a new website move to a convenient location and run</p>
+
+<pre><code>hugo new site blog
+</code></pre>
+
+<p>Change directory to <code>blog</code> and you will see that Hugo has created directories to store all the files required for your website.</p>
+
+<pre><code>drwxr-xr-x  2 user   68 Nov 30 23:58 archetypes
+-rw-r--r--  1 user   97 Dec  1 00:22 config.toml
+drwxr-xr-x  3 user  102 Nov 30 23:59 content
+drwxr-xr-x  2 user   68 Nov 30 23:58 data
+drwxr-xr-x  2 user   68 Nov 30 23:58 layouts
+drwxr-xr-x  2 user   68 Nov 30 23:58 static
+drwxr-xr-x  6 user  204 Dec  1 00:20 themes
+</code></pre>
+
+<p>The directory has 6 sub-directories and 1 file. Let&rsquo;s look at each one of them:</p>
+
+<ul>
+<li><p>archetypes: You can create new content files in Hugo using the <code>hugo new</code> command.
+When you run that command, it adds few configuration properties to the post like date and title.
+Archetype allows you to define your own configuration properties that will be added to the post front matter whenever <code>hugo new</code> command is used.</p></li>
+
+<li><p>config.toml: Every website should have a configuration file at the root.
+By default, the configuration file uses <code>TOML</code> format but you can also use <code>YAML</code> or <code>JSON</code> formats as well.
+<code>TOML</code> is minimal configuration file format that’s easy to read due to obvious semantics.
+The configuration settings mentioned in the <code>config.toml</code> are applied to the full site.
+These configuration settings include <code>baseurl</code> and <code>title</code> of the website.</p></li>
+
+<li><p>content: This is where you will store content of the website.
+Inside <code>content</code>, you will create sub-directories for different sections.
+Let’s suppose your website has three actions – blog, article, and tutorial then you will have three different directories for each of them inside the content directory.
+The name of the section i.e. blog, article, or tutorial will be used by Hugo to apply a specific layout applicable to that section.</p></li>
+
+<li><p>data: This directory is used to store configuration files that can be used by Hugo when generating your website.
+You can write these files in <code>YAML</code>, <code>JSON</code>, or <code>TOML</code> format.</p></li>
+
+<li><p>layouts: The content inside this directory is used to specify how your content will be converted into the static website.</p></li>
+
+<li><p>static: This directory is used to store all the static content that your website will need like images, CSS, JavaScript or other static content.</p></li>
+</ul>
+
+<h2 id="step-2-create-contents">Step 2: Create contents</h2>
+
+<p>Let&rsquo;s add a new post to our <code>blog</code>. We will use the <code>hugo new</code> command to create a new post.
+In our example, we want to create a welcome post to greet users visiting our blog.
+Make sure you are inside the <code>blog</code> directory and type</p>
+
+<pre><code>hugo new post/welcome
+</code></pre>
+
+<p>This will create a new directory <code>post</code> inside the <code>content</code> directory, and a new file named <code>welcome.md</code> inside it.</p>
+
+<p>The content of <code>welcome.md</code> will look like this:</p>
+
+<pre><code>+++
+draft = true
+title = &quot;welcome&quot;
+date = &quot;2016-12-01T00:22:59+01:00&quot;
+
++++
+</code></pre>
+
+<p>The content inside <code>+++</code> is the TOML configuration for the post.
+This configuration is called <strong>front matter</strong>.
+It enables you to define post configuration along with its content.
+By default, each post will have the three configuration properties shown above.</p>
+
+<p>Let&rsquo;s add a short welcome message:</p>
+
+<pre><code>+++
+draft = true
+title = &quot;welcome&quot;
+date = &quot;2016-12-01T00:22:59+01:00&quot;
+
++++
+
+Welcome to my blog!
+</code></pre>
+
+<h2 id="step-3-serve-content">Step 3: Serve content</h2>
+
+<p>Hugo has an inbuilt server that can serve your website content so that you can preview it.
+You can also use the inbuilt Hugo server in production.
+Place yourself in the <code>blog</code> directory and run</p>
+
+<pre><code>hugo server
+</code></pre>
+
+<p>The output will read</p>
+
+<pre><code>0 of 1 draft rendered
+0 future content
+0 pages created
+0 paginator pages created
+0 tags created
+0 categories created
+in 9 ms
+</code></pre>
+
+<p>You can view your blog at <a href="http://localhost:1313">http://localhost:1313</a>, go check it out&hellip; it&rsquo;s a blank page.
+That&rsquo;s because:</p>
+
+<ol>
+<li><p>As you can see in the <code>hugo server</code> command output, Hugo didn’t render the draft.
+Hugo will only render drafts if you pass the <code>buildDrafts</code> flag to the hugo server command.</p></li>
+
+<li><p>We have to specify a theme that Hugo can use to render the content.
+We will do that in the next step.</p></li>
+</ol>
+
+<p>To render drafts, run <code>hugo server --buildDrafts</code> and head back to <a href="http://localhost:1313">http://localhost:1313</a>.
+Yet another wonderful blank page. We are missing the theme, remember that?</p>
+
+<h2 id="step-4-add-theme">Step 4: Add theme</h2>
+
+<p>Themes provide the layout and templates that will be used by Hugo to render your website.
+There are a lot of open-source themes available <a href="https://themes.gohugo.io/">here</a> that you can use.</p>
+
+<p>In order to add a theme move to the <code>themes</code> directory inside the root of your website and clone a theme for your website.
+For our example, we will use the <code>bleak</code> theme.</p>
+
+<p><strong>Inside the themes directory</strong> run <code>git clone https://github.com/Zenithar/hugo-theme-bleak.git</code></p>
+
+<p>Get back to the <code>blog</code> directory (<code>cd ..</code>) and run <code>hugo server --theme=hugo-theme-bleak --buildDrafts</code>.</p>
+
+<p>Go to <a href="http://localhost:1313">http://localhost:1313</a> and enjoy your freshly crafted blog.</p>
+
+<p>Now let&rsquo;s get back to code and try to understand how themes work, in order to customize and modify them.
+A theme consist of the following:</p>
+
+<ul>
+<li><p><strong>theme.toml</strong> is the theme configuration file that gives information about the theme like name and description of theme, author details, and theme license.</p></li>
+
+<li><p><strong>images</strong> directory contains four images, <code>screenshot.png</code>, <code>tn.png</code>, <code>full_blog.png</code> and <code>full_post.png</code>.
+These images are examples of what the theme looks like;
+as an example <code>screenshot.png</code> is the image of the list view and <code>tn.png</code> is the single post view.</p></li>
+
+<li><p><strong>layouts</strong> directory contains different views for different content types.
+Every content type should have two files <code>single.html</code> and <code>list.html</code>.
+<code>single.html</code> is used for rendering a single piece of content.
+<code>list.html</code> is used to view a list of content items.</p></li>
+
+<li><p><strong>static</strong> directory stores all the static assets used by the template.</p></li>
+</ul>
+
+<p>Obviously you can clone multiple themes and test theme using the <code>--theme</code> argument.</p>
+
+<h2 id="step-5-update-config-file">Step 5: Update config file</h2>
+
+<p>The website uses the dummy values specified in <code>blog/config.toml</code>.
+Let’s update the configuration.</p>
+
+<pre><code>baseurl = &quot;https://mywebsite.com&quot;
+title = &quot;My blog&quot;
+languageCode = &quot;en-us&quot;
+</code></pre>
+
+<h3 id="optional-add-comments">Optional: Add comments</h3>
+
+<p>To integrate comments in your blog you can use <strong>Disqus</strong>. Just open the <code>blog/config.toml</code> file and add</p>
+
+<pre><code>[Params]
+  disqusShortname = &lt;your disqus shortname&gt;
+</code></pre>
+
+<p>Now, commenting will be enabled in your blog.</p>
+
+<h2 id="step-6-make-post-public">Step 6: Make post public</h2>
+
+<p>Our welcome post is still in <code>draft</code> status.
+To make a draft public, you can either run this command</p>
+
+<pre><code>hugo undraft content/post/welcome.md
+</code></pre>
+
+<p>or manually change the draft status in the post to <code>false</code>.</p>
+
+<p>Now you can start the server without the <code>buildDrafts</code> argument.</p>
+
+<pre><code>hugo server --theme=hugo-theme-bleak
+</code></pre>
+
+<h2 id="step-7-generate-website">Step 7: Generate website</h2>
+
+<p>To generate Hugo website source you can use to deploy your website on GitHub pages,
+first edit <code>blog/config.toml</code>, changing the baseurl line to:</p>
+
+<pre><code>baseurl = &quot;https://username.github.io/&quot;
+</code></pre>
+
+<p>Then type</p>
+
+<pre><code>hugo --theme=hugo-theme-bleak
+</code></pre>
+
+<p>After this command, a <code>public</code> folder will be created, containing teh generated source.</p>
+
+<h2 id="step-8-go-public">Step 8: Go public</h2>
+
+<p>On the github side of the thing, create a new <strong>empty</strong> (no README) repo named <code>username.github.io</code>.</p>
+
+<p>Now move to the <code>public</code> directory and add version control.</p>
+
+<pre><code>git init
+git remote add origin https://github.com/username/username.github.io.git
+git add --all
+git commit -m &quot;First commit&quot;
+git push origin master
+</code></pre>
+
+<p>Visit <strong><a href="https://username.github.io/">https://username.github.io/</a></strong> and enjoy your blog, now available online.</p>
+
+<p>Anytime, you can regenerate the site with:</p>
+
+<pre><code>hugo --theme=hugo-theme-bleak
+cd public
+git add --all
+git commit -m &quot;&lt;some change message&gt;&quot;
+git push origin master
+</code></pre>
+
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'asolda-github-io';
+    var disqus_identifier = 'https:\/\/asolda.github.io\/post\/hugo-blogger\/';
+    var disqus_title = 'How Hugo turned me into a blogger wannabe';
+    var disqus_url = 'https:\/\/asolda.github.io\/post\/hugo-blogger\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+	</div>
+    <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+<div class="footer pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+    <div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="pure-menu pure-menu-horizontal footer-content">
+            <ul>
+                <li class="pure-menu-heading" id="foot-name">:</li>
+
+                
+
+                
+
+                
+
+                
+
+                
+
+            </ul>
+            <a href="#" class="pure-menu-heading pull-right" id="gototop-btn">↑↑</a>
+        </div>
+	  </div>
+      <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+
+<script src="https://asolda.github.io/js/jquery.min.js" type="text/javascript"></script>
+<script src="https://asolda.github.io/js/jquery.timeago.js" type="text/javascript"></script>
+<script type="text/javascript">
+  $(function(){
+    $("time.timeago").timeago();
+  })
+  $("#toggle-btn").click(function(){
+    $("#toggle-content").toggle();
+    if($(this).html() === "☰") {
+        $(this).html("X")
+    } else {
+        $(this).html("☰")
+    }
+  });
+  $(window).resize(function(){
+    if(window.innerWidth > 768) {
+      $(".desktop").removeAttr("style");
+    }
+  });
+</script>
+
+</body>
+</html>
+
