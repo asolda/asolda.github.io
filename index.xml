@@ -6,8 +6,129 @@
     <description>Recent content on Yet another computer science blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 07 Dec 2016 16:00:27 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 09 Dec 2016 10:42:23 +0100</lastBuildDate>
     <atom:link href="https://asolda.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>An introduction to Deep Learning: part 2</title>
+      <link>https://asolda.github.io/post/deeplearning-2/</link>
+      <pubDate>Fri, 09 Dec 2016 10:42:23 +0100</pubDate>
+      
+      <guid>https://asolda.github.io/post/deeplearning-2/</guid>
+      <description>
+
+&lt;h1 id=&#34;where-we-left&#34;&gt;Where we left&lt;/h1&gt;
+
+&lt;p&gt;In the &lt;a href=&#34;https://asolda.github.io/post/deeplearning-1/&#34;&gt;first part&lt;/a&gt; of this article we have built a complete &lt;strong&gt;Linear Classifier&lt;/strong&gt;;
+it&amp;rsquo;s now time to move on, and get to the interesting bit: &lt;strong&gt;Deep Learning&lt;/strong&gt; is about to kick in.&lt;/p&gt;
+
+&lt;h2 id=&#34;actually-part-1-5&#34;&gt;Actually, part 1.5&lt;/h2&gt;
+
+&lt;p&gt;Sorry about that, but we are not entirely done with our classifier.&lt;/p&gt;
+
+&lt;p&gt;Sure, training &lt;strong&gt;Logistic Regression&lt;/strong&gt; using &lt;strong&gt;Gradient Descent&lt;/strong&gt; is great: for one thing you are directly optimizing the error measure that you care about; that is always a great idea.
+In practice, a lot of &lt;strong&gt;Machine Learning&lt;/strong&gt; &lt;em&gt;research&lt;/em&gt; is about designing the right loss function to optimize.
+The main issue with these models is that they are very &lt;strong&gt;difficult&lt;/strong&gt; to &lt;strong&gt;scale&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;stochastic-gradient-descent&#34;&gt;Stochastic Gradient Descent&lt;/h3&gt;
+
+&lt;p&gt;The problem is simple: you need to compute this gradient:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/7.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;A &amp;ldquo;rule of thumb&amp;rdquo; is that if computing your &lt;strong&gt;Loss&lt;/strong&gt; takes &lt;em&gt;n&lt;/em&gt; floating point operations, computing its gradient takes about &lt;strong&gt;3 times&lt;/strong&gt; that compute.
+We already saw that the Loss function is &lt;strong&gt;huge&lt;/strong&gt;, it depends from every single element in your &lt;strong&gt;Training Set&lt;/strong&gt;
+and we want to train our model on as many data as possible, because in practice more training datas means better model.
+&lt;strong&gt;Gradient Descent&lt;/strong&gt; is also an iterative process, you have to do that for a lot of steps; that means going through your data tens or even &lt;strong&gt;thousands&lt;/strong&gt; of time, that&amp;rsquo;s no good.&lt;/p&gt;
+
+&lt;p&gt;So we are going to cheat and instead of computing the actual Loss, we are going to compute an &lt;strong&gt;estimate&lt;/strong&gt; of it.
+A &lt;strong&gt;very bad&lt;/strong&gt; estimate. A &lt;strong&gt;terrible&lt;/strong&gt; one. Damn, it&amp;rsquo;s so bad you will be wondering how it does even work.&lt;/p&gt;
+
+&lt;p&gt;The estimate we are going to use is simply compute the &lt;strong&gt;Training Loss&lt;/strong&gt; for a &lt;strong&gt;very small random fraction&lt;/strong&gt; of our data.
+We are taking between one and a thousand training samples each time.
+It&amp;rsquo;s very important that the samples are completely random; if they are not, this is not going to work at all.&lt;/p&gt;
+
+&lt;p&gt;The derivatives we will compute will not be the right direction at all, at times it might even &lt;strong&gt;increase&lt;/strong&gt; the Loss rather then reducing it.
+But we are going to compensate by doing this many many times, taking small steps each time.&lt;/p&gt;
+
+&lt;p&gt;Doing this is vastly more efficient than doing traditional Gradient Descent.&lt;/p&gt;
+
+&lt;p&gt;This technique is called &lt;strong&gt;Stochastic Gradient Descent&lt;/strong&gt; (S.G.D.), and it&amp;rsquo;s at the core of &lt;strong&gt;Deep Learning&lt;/strong&gt; because it scales well with data and model size.&lt;/p&gt;
+
+&lt;p&gt;SGD is the only optimizer fast enough, but it comes at a high price: because it&amp;rsquo;s a really bad estimation, we will need to spend some time optimizing it.&lt;/p&gt;
+
+&lt;h3 id=&#34;momentum-and-learning-rate&#34;&gt;Momentum and Learning Rate&lt;/h3&gt;
+
+&lt;p&gt;We have already seen some of this tricks:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Inputs:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;0 mean&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Equal variance&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Weights:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Random&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;0 mean&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Equal variance&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There are a couple more tricks you can use to help SGD.&lt;/p&gt;
+
+&lt;p&gt;The first one is momentum: remember that at each step we are taking a small step in a (random) direction, but that on aggragate those steps take us to the minimum of the Loss.
+We can take advantage of the &lt;strong&gt;knowledge&lt;/strong&gt; we have accumulated from previous steps about where we should be heading.
+A cheap way to do that is to keep a &lt;strong&gt;Running Average&lt;/strong&gt; of the gradients and to use that running average instead of the direction of the current batch of the data:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/8.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;This &lt;strong&gt;Momentum&lt;/strong&gt; technique works very well and often lead to better convergence.&lt;/p&gt;
+
+&lt;p&gt;The second one is &lt;strong&gt;Learning Rate Decay&lt;/strong&gt;: when replacing &lt;strong&gt;Gradient Descent&lt;/strong&gt; with &lt;strong&gt;SGD&lt;/strong&gt;, we realized we were going to take smaller and noisier steps towards our objective.
+&lt;strong&gt;How small&lt;/strong&gt; should that step be? There&amp;rsquo;s not a correct answer for every case;
+one thing that&amp;rsquo;s always the case however, is that is beneficial to make the steps smaller and smaller as we train.
+Some like to apply an &lt;strong&gt;exponential decay&lt;/strong&gt; to their learning rate; others make it smaller when the Learning Rate hits a &lt;strong&gt;plateau&lt;/strong&gt;.
+There are many ways to go about it, but &lt;strong&gt;lowering it over time&lt;/strong&gt; is the key thing to remember.&lt;/p&gt;
+
+&lt;h3 id=&#34;too-many-parameters&#34;&gt;Too many parameters!!&lt;/h3&gt;
+
+&lt;p&gt;SGD, a.k.a. &lt;strong&gt;Black Magic&lt;/strong&gt;. No wonder that&amp;rsquo;s its reputation. We have a lot of different parameters to tune:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Initial Learning Rate&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Learning Rate Decay&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Momentum&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Batch Size&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Weight Initialization&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In practice, it&amp;rsquo;s not that bad: your mantra will be &lt;em&gt;Keep calm, and lower your Learning Rate&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;One good approach is &lt;a href=&#34;http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf&#34;&gt;ADAGRAD&lt;/a&gt;, that can make things a little bit easier:
+&lt;strong&gt;ADAGRAD&lt;/strong&gt; is a modification of SGD that takes care of &lt;strong&gt;Momentum&lt;/strong&gt; and &lt;strong&gt;Learning Rate&lt;/strong&gt; parameters for you.&lt;/p&gt;
+
+&lt;p&gt;One final recap before moving on: we have a very simple linear model:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/9.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;and we have learned how to optimize its parameters on lots and lots of data using &lt;strong&gt;SGD&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s still a &lt;strong&gt;linear&lt;/strong&gt; model, but now we have all the tools that we need: time to go deeper!&lt;/p&gt;
+
+&lt;p&gt;In the next part we will introduce non linearity to our model and we will make it grow deeper and deeper. See you soon.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>An introduction to Deep Learning: part 1</title>

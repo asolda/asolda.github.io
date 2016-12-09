@@ -1,0 +1,267 @@
+<html lang="en">
+<head>
+
+  
+  <meta charset="utf-8">
+  <title>An introduction to Deep Learning: part 2</title>
+  <meta name="description" content="An introduction to Deep Learning: part 2">
+  <meta name="author" content="">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://asolda.github.io/css/fonts.css">
+  
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+  
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+
+  <link rel="stylesheet" href="https://asolda.github.io/css/custom.css">
+
+  
+  
+  <link rel="stylesheet" href="https://asolda.github.io/highlight/styles/default.css">
+  
+  <script src="https://asolda.github.io/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+
+
+<div class="header pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+    <div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="desktop pure-menu pure-menu-horizontal nav-menu">
+            
+            <a href="https://asolda.github.io/" class="site-title pure-menu-heading">Yet another computer science blog</a>
+            <ul class="pure-menu-list">
+                
+                <li class="pure-menu-item">
+                    <a href="https://asolda.github.io/about/" class="pure-menu-link">About</a>
+                </li>
+            </ul>
+        </div>
+        <div class="mobile pure-menu nav-menu">
+            <a href="/" class="pure-menu-heading" id="toggle-home">Yet another computer science blog</a>
+            <a href="#" id="toggle-btn">&#9776;</a>
+            <ul class="pure-menu-list" id="toggle-content" style="display:none;">
+                
+                
+                <li class="pure-menu-item">
+                    <a href="https://asolda.github.io/about" class="pure-menu-link">About</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+
+<div class="pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+	<div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="post">
+
+            <div class="post-title">
+                <p class="footnote">
+                    <time class="">2016-12-09</time>
+		            
+                    
+                    
+
+                    
+
+                    
+                </p>
+                <h1>An introduction to Deep Learning: part 2</h1>
+            </div>
+
+            <div class="post-content">
+                
+
+<h1 id="where-we-left">Where we left</h1>
+
+<p>In the <a href="https://asolda.github.io/post/deeplearning-1/">first part</a> of this article we have built a complete <strong>Linear Classifier</strong>;
+it&rsquo;s now time to move on, and get to the interesting bit: <strong>Deep Learning</strong> is about to kick in.</p>
+
+<h2 id="actually-part-1-5">Actually, part 1.5</h2>
+
+<p>Sorry about that, but we are not entirely done with our classifier.</p>
+
+<p>Sure, training <strong>Logistic Regression</strong> using <strong>Gradient Descent</strong> is great: for one thing you are directly optimizing the error measure that you care about; that is always a great idea.
+In practice, a lot of <strong>Machine Learning</strong> <em>research</em> is about designing the right loss function to optimize.
+The main issue with these models is that they are very <strong>difficult</strong> to <strong>scale</strong>.</p>
+
+<h3 id="stochastic-gradient-descent">Stochastic Gradient Descent</h3>
+
+<p>The problem is simple: you need to compute this gradient:</p>
+
+<p><img src="/images/formulas/7.jpeg" style="margin: 0 auto; display: block; width:33%"></p>
+
+<p>A &ldquo;rule of thumb&rdquo; is that if computing your <strong>Loss</strong> takes <em>n</em> floating point operations, computing its gradient takes about <strong>3 times</strong> that compute.
+We already saw that the Loss function is <strong>huge</strong>, it depends from every single element in your <strong>Training Set</strong>
+and we want to train our model on as many data as possible, because in practice more training datas means better model.
+<strong>Gradient Descent</strong> is also an iterative process, you have to do that for a lot of steps; that means going through your data tens or even <strong>thousands</strong> of time, that&rsquo;s no good.</p>
+
+<p>So we are going to cheat and instead of computing the actual Loss, we are going to compute an <strong>estimate</strong> of it.
+A <strong>very bad</strong> estimate. A <strong>terrible</strong> one. Damn, it&rsquo;s so bad you will be wondering how it does even work.</p>
+
+<p>The estimate we are going to use is simply compute the <strong>Training Loss</strong> for a <strong>very small random fraction</strong> of our data.
+We are taking between one and a thousand training samples each time.
+It&rsquo;s very important that the samples are completely random; if they are not, this is not going to work at all.</p>
+
+<p>The derivatives we will compute will not be the right direction at all, at times it might even <strong>increase</strong> the Loss rather then reducing it.
+But we are going to compensate by doing this many many times, taking small steps each time.</p>
+
+<p>Doing this is vastly more efficient than doing traditional Gradient Descent.</p>
+
+<p>This technique is called <strong>Stochastic Gradient Descent</strong> (S.G.D.), and it&rsquo;s at the core of <strong>Deep Learning</strong> because it scales well with data and model size.</p>
+
+<p>SGD is the only optimizer fast enough, but it comes at a high price: because it&rsquo;s a really bad estimation, we will need to spend some time optimizing it.</p>
+
+<h3 id="momentum-and-learning-rate">Momentum and Learning Rate</h3>
+
+<p>We have already seen some of this tricks:</p>
+
+<ol>
+<li><p>Inputs:</p>
+
+<ul>
+<li><p>0 mean</p></li>
+
+<li><p>Equal variance</p></li>
+</ul></li>
+
+<li><p>Weights:</p>
+
+<ul>
+<li><p>Random</p></li>
+
+<li><p>0 mean</p></li>
+
+<li><p>Equal variance</p></li>
+</ul></li>
+</ol>
+
+<p>There are a couple more tricks you can use to help SGD.</p>
+
+<p>The first one is momentum: remember that at each step we are taking a small step in a (random) direction, but that on aggragate those steps take us to the minimum of the Loss.
+We can take advantage of the <strong>knowledge</strong> we have accumulated from previous steps about where we should be heading.
+A cheap way to do that is to keep a <strong>Running Average</strong> of the gradients and to use that running average instead of the direction of the current batch of the data:</p>
+
+<p><img src="/images/formulas/8.jpeg" style="margin: 0 auto; display: block; width:33%"></p>
+
+<p>This <strong>Momentum</strong> technique works very well and often lead to better convergence.</p>
+
+<p>The second one is <strong>Learning Rate Decay</strong>: when replacing <strong>Gradient Descent</strong> with <strong>SGD</strong>, we realized we were going to take smaller and noisier steps towards our objective.
+<strong>How small</strong> should that step be? There&rsquo;s not a correct answer for every case;
+one thing that&rsquo;s always the case however, is that is beneficial to make the steps smaller and smaller as we train.
+Some like to apply an <strong>exponential decay</strong> to their learning rate; others make it smaller when the Learning Rate hits a <strong>plateau</strong>.
+There are many ways to go about it, but <strong>lowering it over time</strong> is the key thing to remember.</p>
+
+<h3 id="too-many-parameters">Too many parameters!!</h3>
+
+<p>SGD, a.k.a. <strong>Black Magic</strong>. No wonder that&rsquo;s its reputation. We have a lot of different parameters to tune:</p>
+
+<ul>
+<li><p>Initial Learning Rate</p></li>
+
+<li><p>Learning Rate Decay</p></li>
+
+<li><p>Momentum</p></li>
+
+<li><p>Batch Size</p></li>
+
+<li><p>Weight Initialization</p></li>
+</ul>
+
+<p>In practice, it&rsquo;s not that bad: your mantra will be <em>Keep calm, and lower your Learning Rate</em>.</p>
+
+<p>One good approach is <a href="http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf">ADAGRAD</a>, that can make things a little bit easier:
+<strong>ADAGRAD</strong> is a modification of SGD that takes care of <strong>Momentum</strong> and <strong>Learning Rate</strong> parameters for you.</p>
+
+<p>One final recap before moving on: we have a very simple linear model:</p>
+
+<p><img src="/images/formulas/9.jpeg" style="margin: 0 auto; display: block; width:100%"></p>
+
+<p>and we have learned how to optimize its parameters on lots and lots of data using <strong>SGD</strong>.</p>
+
+<p>It&rsquo;s still a <strong>linear</strong> model, but now we have all the tools that we need: time to go deeper!</p>
+
+<p>In the next part we will introduce non linearity to our model and we will make it grow deeper and deeper. See you soon.</p>
+
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'asolda-github-io';
+    var disqus_identifier = 'https:\/\/asolda.github.io\/post\/deeplearning-2\/';
+    var disqus_title = 'An introduction to Deep Learning: part 2';
+    var disqus_url = 'https:\/\/asolda.github.io\/post\/deeplearning-2\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+	</div>
+    <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+<div class="footer pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+    <div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="pure-menu pure-menu-horizontal footer-content">
+            <ul>
+                <li class="pure-menu-heading" id="foot-name">:</li>
+
+                
+
+                
+
+                
+
+                
+
+                
+
+            </ul>
+            <a href="#" class="pure-menu-heading pull-right" id="gototop-btn">↑↑</a>
+        </div>
+	  </div>
+      <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+
+<script src="https://asolda.github.io/js/jquery.min.js" type="text/javascript"></script>
+<script src="https://asolda.github.io/js/jquery.timeago.js" type="text/javascript"></script>
+<script type="text/javascript">
+  $(function(){
+    $("time.timeago").timeago();
+  })
+  $("#toggle-btn").click(function(){
+    $("#toggle-content").toggle();
+    if($(this).html() === "☰") {
+        $(this).html("X")
+    } else {
+        $(this).html("☰")
+    }
+  });
+  $(window).resize(function(){
+    if(window.innerWidth > 768) {
+      $(".desktop").removeAttr("style");
+    }
+  });
+</script>
+
+</body>
+</html>
+
