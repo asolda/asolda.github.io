@@ -101,7 +101,7 @@ The main issue with these models is that they are very <strong>difficult</strong
 
 <p>The problem is simple: you need to compute this gradient:</p>
 
-<p><img src="/images/formulas/7.jpeg" style="margin: 0 auto; display: block; width:33%"></p>
+<p><img src="/images/formulas/7.png" style="margin: 0 auto; display: block; width:33%"></p>
 
 <p>A &ldquo;rule of thumb&rdquo; is that if computing your <strong>Loss</strong> takes <em>n</em> floating point operations, computing its gradient takes about <strong>3 times</strong> that compute.
 We already saw that the Loss function is <strong>huge</strong>, it depends from every single element in your <strong>Training Set</strong>
@@ -154,7 +154,7 @@ But we are going to compensate by doing this many many times, taking small steps
 We can take advantage of the <strong>knowledge</strong> we have accumulated from previous steps about where we should be heading.
 A cheap way to do that is to keep a <strong>Running Average</strong> of the gradients and to use that running average instead of the direction of the current batch of the data:</p>
 
-<p><img src="/images/formulas/8.jpeg" style="margin: 0 auto; display: block; width:33%"></p>
+<p><img src="/images/formulas/8.png" style="margin: 0 auto; display: block; width:33%"></p>
 
 <p>This <strong>Momentum</strong> technique works very well and often lead to better convergence.</p>
 
@@ -187,7 +187,7 @@ There are many ways to go about it, but <strong>lowering it over time</strong> i
 
 <p>One final recap before moving on: we have a very simple linear model:</p>
 
-<p><img src="/images/formulas/9.jpeg" style="margin: 0 auto; display: block; width:100%"></p>
+<p><img src="/images/formulas/9.png" style="margin: 0 auto; display: block; width:100%"></p>
 
 <p>and we have learned how to optimize its parameters on lots and lots of data using <strong>SGD</strong>.</p>
 

@@ -34,7 +34,7 @@ The main issue with these models is that they are very &lt;strong&gt;difficult&l
 
 &lt;p&gt;The problem is simple: you need to compute this gradient:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/7.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/7.png&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;A &amp;ldquo;rule of thumb&amp;rdquo; is that if computing your &lt;strong&gt;Loss&lt;/strong&gt; takes &lt;em&gt;n&lt;/em&gt; floating point operations, computing its gradient takes about &lt;strong&gt;3 times&lt;/strong&gt; that compute.
 We already saw that the Loss function is &lt;strong&gt;huge&lt;/strong&gt;, it depends from every single element in your &lt;strong&gt;Training Set&lt;/strong&gt;
@@ -87,7 +87,7 @@ But we are going to compensate by doing this many many times, taking small steps
 We can take advantage of the &lt;strong&gt;knowledge&lt;/strong&gt; we have accumulated from previous steps about where we should be heading.
 A cheap way to do that is to keep a &lt;strong&gt;Running Average&lt;/strong&gt; of the gradients and to use that running average instead of the direction of the current batch of the data:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/8.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/8.png&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;This &lt;strong&gt;Momentum&lt;/strong&gt; technique works very well and often lead to better convergence.&lt;/p&gt;
 
@@ -120,7 +120,7 @@ There are many ways to go about it, but &lt;strong&gt;lowering it over time&lt;/
 
 &lt;p&gt;One final recap before moving on: we have a very simple linear model:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/9.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/9.png&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;and we have learned how to optimize its parameters on lots and lots of data using &lt;strong&gt;SGD&lt;/strong&gt;.&lt;/p&gt;
 
@@ -169,10 +169,10 @@ Our aim today is to build a &lt;strong&gt;Logistic classifier&lt;/strong&gt; bef
 
 &lt;h3 id=&#34;logistic-classifier&#34;&gt;Logistic classifier&lt;/h3&gt;
 
-&lt;p&gt;A Logistic Classifier is what is called a &lt;strong&gt;Linear Classifier&lt;/strong&gt;: it takes the inputs and applyes a linear function to them to generate its prediction.
+&lt;p&gt;.A Logistic Classifier is what is called a &lt;strong&gt;Linear Classifier&lt;/strong&gt;: it takes the inputs and applyes a linear function to them to generate its prediction.
 The mathematical formulation is:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/1.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:25%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/1.png&#34; style=&#34;margin: 0 auto; display: block; width:25%&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;where the &lt;em&gt;X&lt;/em&gt; variable represents the input (the pixels of an image maybe) and &lt;em&gt;y&lt;/em&gt; is the prediction;
 the linear function is just a giant matrix multiplication: it takes the input as a vector and multiplies it with the &lt;strong&gt;weigth matrix&lt;/strong&gt;.
@@ -181,7 +181,7 @@ The other vector in the equation, &lt;em&gt;b&lt;/em&gt;, is called the &lt;stro
 
 &lt;p&gt;The output will contain &lt;strong&gt;scores&lt;/strong&gt; for each possible class; if the score for a class is higher, then it&amp;rsquo;s likely that the input belongs to that class.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/2.jpeg&#34; style=&#34;margin: 0 auto; display: block; heigth:25%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/2.png&#34; style=&#34;margin: 0 auto; display: block; heigth:25%&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;However, since an input can only belong to a single class, we need to turn these scores into probabilties.
 In order to do use, we can use a &lt;a href=&#34;https://en.wikipedia.org/wiki/Softmax_function&#34;&gt;Softmax function&lt;/a&gt;.
@@ -190,7 +190,7 @@ What&amp;rsquo;s important to know is that it takes the scores and turn them int
 &lt;p&gt;After we apply the Softmax function, we find out that the probability for the right class is higher, and other probabilities are much smaller:
 this help us to represent the outputs in a more practical way using the &lt;strong&gt;One-Hot Encoding&lt;/strong&gt;: we create a new vector where the right class has a value of 1, and all the other values are 0.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/3.jpeg&#34; style=&#34;margin: 0 auto; display: block; heigth:25%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/3.png&#34; style=&#34;margin: 0 auto; display: block; heigth:25%&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Small recap&lt;/strong&gt;: we start from our input (as a vector), we apply the linear function to obtain scores for each class; we then convert scores to probabilities with a Softmax function and finally we apply one-hot encoding to the resulting vector.&lt;/p&gt;
 
@@ -200,7 +200,7 @@ We can deal with this problem using &lt;strong&gt;embeddings&lt;/strong&gt;, we 
 &lt;p&gt;The good thing about this approach is that we can now mesure how well our model is performing by comparing the output vector with the probabilities and the one-hot vector corresponding to your labels.
 The natural way to measure the distance between two probability vectors is called the &lt;strong&gt;Cross Entropy&lt;/strong&gt;:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/4.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:37%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/4.png&#34; style=&#34;margin: 0 auto; display: block; width:37%&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;Remember that &lt;em&gt;S&lt;/em&gt; is the vector with our probabilities and &lt;em&gt;L&lt;/em&gt; is the one-hot encoded vector.&lt;/p&gt;
 
@@ -211,7 +211,7 @@ We want values such that the distance for the correct class is low, but the dist
 
 &lt;p&gt;One thing we can do, is measure this distance averaged over the entire training set:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/5.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:37%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/5.png&#34; style=&#34;margin: 0 auto; display: block; width:37%&#34;&gt;&lt;/p&gt;
 
 &lt;p&gt;This is called the &lt;strong&gt;training loss&lt;/strong&gt;; this is a big sum with a large matrix in it, so be careful&amp;hellip;&lt;/p&gt;
 
@@ -260,7 +260,7 @@ So we will use a small sigma to begin with.&lt;/p&gt;
 &lt;li&gt;&lt;p&gt;Calculate tha average of the &lt;strong&gt;Training Loss&lt;/strong&gt; over the entire training data&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;Optimization&lt;/strong&gt; process:
-&lt;img src=&#34;https://asolda.github.io/images/formulas/6.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:37%&#34;&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;img src=&#34;https://asolda.github.io/images/formulas/6.png&#34; style=&#34;margin: 0 auto; display: block; width:37%&#34;&gt;&lt;/p&gt;&lt;/li&gt;
 
 &lt;li&gt;&lt;p&gt;Repeat from step 2&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;

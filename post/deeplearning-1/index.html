@@ -115,10 +115,10 @@ Our aim today is to build a <strong>Logistic classifier</strong> before moving o
 
 <h3 id="logistic-classifier">Logistic classifier</h3>
 
-<p>A Logistic Classifier is what is called a <strong>Linear Classifier</strong>: it takes the inputs and applyes a linear function to them to generate its prediction.
+<p>.A Logistic Classifier is what is called a <strong>Linear Classifier</strong>: it takes the inputs and applyes a linear function to them to generate its prediction.
 The mathematical formulation is:</p>
 
-<p><img src="/images/formulas/1.jpeg" style="margin: 0 auto; display: block; width:25%"></p>
+<p><img src="/images/formulas/1.png" style="margin: 0 auto; display: block; width:25%"></p>
 
 <p>where the <em>X</em> variable represents the input (the pixels of an image maybe) and <em>y</em> is the prediction;
 the linear function is just a giant matrix multiplication: it takes the input as a vector and multiplies it with the <strong>weigth matrix</strong>.
@@ -127,7 +127,7 @@ The other vector in the equation, <em>b</em>, is called the <strong>bias vector<
 
 <p>The output will contain <strong>scores</strong> for each possible class; if the score for a class is higher, then it&rsquo;s likely that the input belongs to that class.</p>
 
-<p><img src="/images/formulas/2.jpeg" style="margin: 0 auto; display: block; heigth:25%"></p>
+<p><img src="/images/formulas/2.png" style="margin: 0 auto; display: block; heigth:25%"></p>
 
 <p>However, since an input can only belong to a single class, we need to turn these scores into probabilties.
 In order to do use, we can use a <a href="https://en.wikipedia.org/wiki/Softmax_function">Softmax function</a>.
@@ -136,7 +136,7 @@ What&rsquo;s important to know is that it takes the scores and turn them into pr
 <p>After we apply the Softmax function, we find out that the probability for the right class is higher, and other probabilities are much smaller:
 this help us to represent the outputs in a more practical way using the <strong>One-Hot Encoding</strong>: we create a new vector where the right class has a value of 1, and all the other values are 0.</p>
 
-<p><img src="/images/formulas/3.jpeg" style="margin: 0 auto; display: block; heigth:25%"></p>
+<p><img src="/images/formulas/3.png" style="margin: 0 auto; display: block; heigth:25%"></p>
 
 <p><strong>Small recap</strong>: we start from our input (as a vector), we apply the linear function to obtain scores for each class; we then convert scores to probabilities with a Softmax function and finally we apply one-hot encoding to the resulting vector.</p>
 
@@ -146,7 +146,7 @@ We can deal with this problem using <strong>embeddings</strong>, we will eventua
 <p>The good thing about this approach is that we can now mesure how well our model is performing by comparing the output vector with the probabilities and the one-hot vector corresponding to your labels.
 The natural way to measure the distance between two probability vectors is called the <strong>Cross Entropy</strong>:</p>
 
-<p><img src="/images/formulas/4.jpeg" style="margin: 0 auto; display: block; width:37%"></p>
+<p><img src="/images/formulas/4.png" style="margin: 0 auto; display: block; width:37%"></p>
 
 <p>Remember that <em>S</em> is the vector with our probabilities and <em>L</em> is the one-hot encoded vector.</p>
 
@@ -157,7 +157,7 @@ We want values such that the distance for the correct class is low, but the dist
 
 <p>One thing we can do, is measure this distance averaged over the entire training set:</p>
 
-<p><img src="/images/formulas/5.jpeg" style="margin: 0 auto; display: block; width:37%"></p>
+<p><img src="/images/formulas/5.png" style="margin: 0 auto; display: block; width:37%"></p>
 
 <p>This is called the <strong>training loss</strong>; this is a big sum with a large matrix in it, so be careful&hellip;</p>
 
@@ -206,7 +206,7 @@ So we will use a small sigma to begin with.</p>
 <li><p>Calculate tha average of the <strong>Training Loss</strong> over the entire training data</p></li>
 
 <li><p><strong>Optimization</strong> process:
-<img src="/images/formulas/6.jpeg" style="margin: 0 auto; display: block; width:37%"></p></li>
+<img src="/images/formulas/6.png" style="margin: 0 auto; display: block; width:37%"></p></li>
 
 <li><p>Repeat from step 2</p></li>
 </ol>
