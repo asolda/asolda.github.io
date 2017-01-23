@@ -2,8 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://asolda.github.io/</loc>
-    <lastmod>2016-12-09T10:42:23+01:00</lastmod>
+    <loc>https://asolda.github.io/post/deeplearning-3/</loc>
+    <lastmod>2017-01-23T11:52:15+01:00</lastmod>
   </url>
   
   <url>
@@ -29,6 +29,18 @@
   <url>
     <loc>https://asolda.github.io/post/hugo-blogger/</loc>
     <lastmod>2016-12-01T15:13:03+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://asolda.github.io/post/</loc>
+    <lastmod>2017-01-23T11:52:15+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://asolda.github.io/</loc>
+    <lastmod>2017-01-23T11:52:15+01:00</lastmod>
+    <priority>0</priority>
   </url>
   
 </urlset>

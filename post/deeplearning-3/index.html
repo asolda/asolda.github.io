@@ -1,0 +1,313 @@
+<html lang="en">
+<head>
+
+  
+  <meta charset="utf-8">
+  <title>An introduction to Deep Learning: part 3</title>
+  <meta name="description" content="An introduction to Deep Learning: part 3">
+  <meta name="author" content="">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://asolda.github.io/css/fonts.css">
+  
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css">
+  
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css">
+
+  <link rel="stylesheet" href="https://asolda.github.io/css/custom.css">
+
+  
+  
+  <link rel="stylesheet" href="https://asolda.github.io/highlight/styles/default.css">
+  
+  <script src="https://asolda.github.io/highlight/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+
+
+<div class="header pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+    <div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="desktop pure-menu pure-menu-horizontal nav-menu">
+            
+            <a href="https://asolda.github.io/" class="site-title pure-menu-heading">Yet another computer science blog</a>
+            <ul class="pure-menu-list">
+                
+                <li class="pure-menu-item">
+                    <a href="https://asolda.github.io/about/" class="pure-menu-link">About</a>
+                </li>
+            </ul>
+        </div>
+        <div class="mobile pure-menu nav-menu">
+            <a href="/" class="pure-menu-heading" id="toggle-home">Yet another computer science blog</a>
+            <a href="#" id="toggle-btn">&#9776;</a>
+            <ul class="pure-menu-list" id="toggle-content" style="display:none;">
+                
+                
+                <li class="pure-menu-item">
+                    <a href="https://asolda.github.io/about" class="pure-menu-link">About</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+
+<div class="pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+	<div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="post">
+
+            <div class="post-title">
+                <p class="footnote">
+                    <time class="">2017-01-23</time>
+		            
+                    
+                    
+
+                    
+
+                    
+                </p>
+                <h1>An introduction to Deep Learning: part 3</h1>
+            </div>
+
+            <div class="post-content">
+                
+
+<h1 id="deep-neural-networks">Deep Neural Networks</h1>
+
+<p>In the <a href="https://asolda.github.io/post/deeplearning-1/">first</a> and <a href="https://asolda.github.io/post/deeplearning-2/">second</a> part of this tutorial,
+we have trained a simple <strong>Logistic Classifier</strong>. Now we are going to take this classifier and turn it into a <strong>Deep Network</strong>.</p>
+
+<h2 id="a-limited-model">A limited model</h2>
+
+<p>As a reminder, the model that we have trained so far is nice, but also relatively limited:</p>
+
+<p><img src="/images/formulas/9.png" style="margin: 0 auto; display: block; width:100%"></p>
+
+<p>An important question is: how many learning parameters do we have? Assuming <strong>N</strong> inputs and <strong>k</strong> outputs,
+you have (N + 1) * k parameters to use. The thing is, you might want to use many many more parameters in practice.</p>
+
+<p>Also, the model is linear, so the interactions that your model is capable of is limited.
+The bright side of linearity is that Linear Models are efficient: big matrix multiplies are exactly what GPUs are designed for.</p>
+
+<p>Numerically, linear operations are very stable:</p>
+
+<p><img src="/images/formulas/10.png" style="margin: 0 auto; display: block; width:33%"></p>
+
+<p>Small changes in the input can never yield big changes in the output.
+The derivatives are very nice too. The derivative of a linear function is constant; it doesn&rsquo;t get more stable than that.</p>
+
+<p>So we would like to keep our parameters inside linear functions, but we would also want the entire model to be <strong>non-linear</strong>.</p>
+
+<p>We can just keep multiplying our inputs by linear function, because that&rsquo;s just equivalent to one big linear function.</p>
+
+<p><img src="/images/formulas/11.png" style="margin: 0 auto; display: block; width:33%"></p>
+
+<p>So we are going to have to introduce non linearity.</p>
+
+<h2 id="rectified-linear-units">Rectified Linear Units</h2>
+
+<p>We are going to use the lazy enginner&rsquo;s favorite non-linear function: <strong>RELU</strong>.</p>
+
+<p><img src="/images/graphs/1.png" style="margin: 0 auto; display: block; width:33%"></p>
+
+<p>RELUs are the easiest non-linear function you can think of: they are linear if the parameter is greater that 0, and 0 everywhere else.
+The derivative is nice as well: 0 if the input is less than 0 and 1 everywhere else.</p>
+
+<p>What we are going to do is take our linear classifier and do the minimum amount of work to make it non-linear.</p>
+
+<h3 id="network-of-relus">Network of RELUs</h3>
+
+<p>Instead of having a single matrix multiply as our classifier, we are going to insert a RELU right in the middle:</p>
+
+<p><img src="/images/formulas/12.png" style="margin: 0 auto; display: block; width:100%"></p>
+
+<p>We now have two matrices: one going from the input to the RELU, and another one connecting the RELU to the classifier.</p>
+
+<p>We have solved two of our problems:</p>
+
+<ol>
+<li><p>Our function is now non-linear, thanks to the RELU in the middle.</p></li>
+
+<li><p>We have a new knob that we can tune: the number of RELU units that we have in out classifier.</p></li>
+</ol>
+
+<p>You have in fact just built your first neural network. Congratulations.</p>
+
+<p>I know, there are no neurons, no dendrits, no axons, no activation functions&hellip; Something feels off, right?
+Yes, we could talk about neural networks as metaphors for the brain; it is nice and it might even be true,
+but it comes with a lot of baggage and it can lead you astray.</p>
+
+<p><strong>An important note</strong>: the formula above represents a <strong>two-layer</strong> Neural Network:</p>
+
+<ol>
+<li><p>The first layer effectively consists of the set of weights and biases applied to X and passed through ReLUs.
+The output of this layer is fed to the next one, but is not observable outside the network, hence it is known as a <em>hidden layer</em>.</p></li>
+
+<li><p>The second layer consists of the weights and biases applied to these intermediate outputs,
+followed by the softmax function to generate probabilities.</p></li>
+</ol>
+
+<h2 id="don-t-forget-the-math">Don&rsquo;t forget the math</h2>
+
+<p>One reason to build this network by stacking simple operations is that it makes the math very simple.
+Simple enough that a Deep Learning Framework can manage it for you.
+The key mathematical insight is the <strong>chain rule</strong>:</p>
+
+<p><img src="/images/formulas/13.png" style="margin: 0 auto; display: block; width:50%"></p>
+
+<p>If you have two functions that get composed (one is applied to the output of the other),
+than the chain rule tells you that you can compute the derivatives of that function simply by taking the product of the derivatives of the components.
+Easier done than said, and very powerfull: as long as you know how to write the derivatives if your individual function,
+there is a simple way to combine them together and compute the derivative for the whole function.
+There is also a way a way to write this chain rule that is very efficient, with lots of data reuse.</p>
+
+<p>Here is a full example:</p>
+
+<p><img src="/images/graphs/2.png" style="margin: 0 auto; display: block; width:100%"></p>
+
+<p>Our network is a stack of simple operations: linear transforms, RELUs, whatewer we want. Some have parameters, like the matrix tranform;
+some don&rsquo;t, like the RELUs. When we apply our data to some input X, we have data flowing through the stack up to the prediction Y.
+To compute the derivatives, we create another graph where the data flows backward through the network, gets combined using the chain rule and produces gradients.
+That graph can be derived completely automatically from the individual operations in our stack,
+so most Deep Learning frameworks will just do it for you.</p>
+
+<p>This is called <strong>back-propagation</strong>, and it&rsquo;s a very powerfull concept.
+It makes computing derivatives of comples functions very efficient, as long as the function is made up of simple blocks with simple derivatives.
+Running the model up to the predictions is called forward-propagation; the model that goes backwards is called back prop.</p>
+
+<h2 id="full-recap">Full recap</h2>
+
+<p>So, to recap, to run Stochastic Gradient Descent for every single batch of your data in your training set:</p>
+
+<ol>
+<li><p>Run the forward prop</p>
+
+<p><img src="/images/graphs/3.png" style="margin: 0 auto; display: block; width:100%"></p></li>
+
+<li><p>Then, run the back prop</p>
+
+<p><img src="/images/graphs/4.png" style="margin: 0 auto; display: block; width:100%"></p>
+
+<p>That will give you gradients for each of your weights in your model.</p></li>
+
+<li><p>Apply those gradients with the learning rates to your original weights, and update them.</p>
+
+<p><img src="/images/formulas/14.png" style="margin: 0 auto; display: block; width:50%"></p>
+
+<p><img src="/images/formulas/15.png" style="margin: 0 auto; display: block; width:50%"></p></li>
+</ol>
+
+<p>Repeat that all over again many many times. This is how your entire model gets optimized.</p>
+
+<h1 id="going-deeper">Going deeper</h1>
+
+<p>So now you have a small Neural Network:</p>
+
+<p><img src="/images/graphs/5.png" style="margin: 0 auto; display: block; width:100%"></p>
+
+<p>It&rsquo;s not particularly deep, it has just two layers. You can make it bigger, more complex, by increasing the size of that hidden layer in the middle.
+Just increasing the number of RELUs unit is not particularly efficient; you need to make ot very big and then it gets really hard to train.</p>
+
+<p>This is where the central idea of <strong>Deep Learning</strong> comes in: you can add more layers, and make your model deeper.</p>
+
+<p><img src="/images/graphs/6.png" style="margin: 0 auto; display: block; width:100%"></p>
+
+<p>There are lots of good reasons to do that:</p>
+
+<ol>
+<li><p>Parameter efficiency: you can tipically get much more performance with fewer parameters, by going deeper rather than wider.</p></li>
+
+<li><p>A lot of natural phenomena have a hierarchical structure which deep models capture (see <a href="https://asolda.github.io/post/convnet/">this article</a> for example).</p></li>
+</ol>
+
+<h2 id="wrapping-it-up">Wrapping it up</h2>
+
+<p>The next important topic is <strong>regularization</strong>. Better regularization techniques are one of the main reason why we are so good at training deep models todey.</p>
+
+<p>In the next (and hopefully last )part of the tutorial we will take a <em>deeper</em> look at this topic.</p>
+
+<p>In the meanwhile, you know enough to effectively use libraries such as <a href="https://www.tensorflow.org/">TensorFlow</a>,
+to train theory into practice. I highly incourage you to have fun with the tutorials and experiment with your own models.</p>
+
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'asolda-github-io';
+    var disqus_identifier = 'https:\/\/asolda.github.io\/post\/deeplearning-3\/';
+    var disqus_title = 'An introduction to Deep Learning: part 3';
+    var disqus_url = 'https:\/\/asolda.github.io\/post\/deeplearning-3\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+	</div>
+    <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+<div class="footer pure-g">
+    <div class="pure-u-1-24 pure-u-md-5-24"></div>
+    <div class="pure-u-11-12 pure-u-md-5-8">
+        <div class="pure-menu pure-menu-horizontal footer-content">
+            <ul>
+                <li class="pure-menu-heading" id="foot-name">:</li>
+
+                
+
+                
+
+                
+
+                
+
+                
+
+            </ul>
+            <a href="#" class="pure-menu-heading pull-right" id="gototop-btn">↑↑</a>
+        </div>
+	  </div>
+      <div class="pure-u-1-24 pure-u-md-1-6"></div>
+</div>
+
+
+<script src="https://asolda.github.io/js/jquery.min.js" type="text/javascript"></script>
+<script src="https://asolda.github.io/js/jquery.timeago.js" type="text/javascript"></script>
+<script type="text/javascript">
+  $(function(){
+    $("time.timeago").timeago();
+  })
+  $("#toggle-btn").click(function(){
+    $("#toggle-content").toggle();
+    if($(this).html() === "☰") {
+        $(this).html("X")
+    } else {
+        $(this).html("☰")
+    }
+  });
+  $(window).resize(function(){
+    if(window.innerWidth > 768) {
+      $(".desktop").removeAttr("style");
+    }
+  });
+</script>
+
+</body>
+</html>
+

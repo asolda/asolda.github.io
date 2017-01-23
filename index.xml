@@ -6,8 +6,175 @@
     <description>Recent content on Yet another computer science blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 09 Dec 2016 10:42:23 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 23 Jan 2017 11:52:15 +0100</lastBuildDate>
     <atom:link href="https://asolda.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>An introduction to Deep Learning: part 3</title>
+      <link>https://asolda.github.io/post/deeplearning-3/</link>
+      <pubDate>Mon, 23 Jan 2017 11:52:15 +0100</pubDate>
+      
+      <guid>https://asolda.github.io/post/deeplearning-3/</guid>
+      <description>
+
+&lt;h1 id=&#34;deep-neural-networks&#34;&gt;Deep Neural Networks&lt;/h1&gt;
+
+&lt;p&gt;In the &lt;a href=&#34;https://asolda.github.io/post/deeplearning-1/&#34;&gt;first&lt;/a&gt; and &lt;a href=&#34;https://asolda.github.io/post/deeplearning-2/&#34;&gt;second&lt;/a&gt; part of this tutorial,
+we have trained a simple &lt;strong&gt;Logistic Classifier&lt;/strong&gt;. Now we are going to take this classifier and turn it into a &lt;strong&gt;Deep Network&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;a-limited-model&#34;&gt;A limited model&lt;/h2&gt;
+
+&lt;p&gt;As a reminder, the model that we have trained so far is nice, but also relatively limited:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/9.png&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;An important question is: how many learning parameters do we have? Assuming &lt;strong&gt;N&lt;/strong&gt; inputs and &lt;strong&gt;k&lt;/strong&gt; outputs,
+you have (N + 1) * k parameters to use. The thing is, you might want to use many many more parameters in practice.&lt;/p&gt;
+
+&lt;p&gt;Also, the model is linear, so the interactions that your model is capable of is limited.
+The bright side of linearity is that Linear Models are efficient: big matrix multiplies are exactly what GPUs are designed for.&lt;/p&gt;
+
+&lt;p&gt;Numerically, linear operations are very stable:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/10.png&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;Small changes in the input can never yield big changes in the output.
+The derivatives are very nice too. The derivative of a linear function is constant; it doesn&amp;rsquo;t get more stable than that.&lt;/p&gt;
+
+&lt;p&gt;So we would like to keep our parameters inside linear functions, but we would also want the entire model to be &lt;strong&gt;non-linear&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;We can just keep multiplying our inputs by linear function, because that&amp;rsquo;s just equivalent to one big linear function.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/11.png&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;So we are going to have to introduce non linearity.&lt;/p&gt;
+
+&lt;h2 id=&#34;rectified-linear-units&#34;&gt;Rectified Linear Units&lt;/h2&gt;
+
+&lt;p&gt;We are going to use the lazy enginner&amp;rsquo;s favorite non-linear function: &lt;strong&gt;RELU&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/graphs/1.png&#34; style=&#34;margin: 0 auto; display: block; width:33%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;RELUs are the easiest non-linear function you can think of: they are linear if the parameter is greater that 0, and 0 everywhere else.
+The derivative is nice as well: 0 if the input is less than 0 and 1 everywhere else.&lt;/p&gt;
+
+&lt;p&gt;What we are going to do is take our linear classifier and do the minimum amount of work to make it non-linear.&lt;/p&gt;
+
+&lt;h3 id=&#34;network-of-relus&#34;&gt;Network of RELUs&lt;/h3&gt;
+
+&lt;p&gt;Instead of having a single matrix multiply as our classifier, we are going to insert a RELU right in the middle:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/12.png&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;We now have two matrices: one going from the input to the RELU, and another one connecting the RELU to the classifier.&lt;/p&gt;
+
+&lt;p&gt;We have solved two of our problems:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Our function is now non-linear, thanks to the RELU in the middle.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;We have a new knob that we can tune: the number of RELU units that we have in out classifier.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;You have in fact just built your first neural network. Congratulations.&lt;/p&gt;
+
+&lt;p&gt;I know, there are no neurons, no dendrits, no axons, no activation functions&amp;hellip; Something feels off, right?
+Yes, we could talk about neural networks as metaphors for the brain; it is nice and it might even be true,
+but it comes with a lot of baggage and it can lead you astray.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;An important note&lt;/strong&gt;: the formula above represents a &lt;strong&gt;two-layer&lt;/strong&gt; Neural Network:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The first layer effectively consists of the set of weights and biases applied to X and passed through ReLUs.
+The output of this layer is fed to the next one, but is not observable outside the network, hence it is known as a &lt;em&gt;hidden layer&lt;/em&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The second layer consists of the weights and biases applied to these intermediate outputs,
+followed by the softmax function to generate probabilities.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;don-t-forget-the-math&#34;&gt;Don&amp;rsquo;t forget the math&lt;/h2&gt;
+
+&lt;p&gt;One reason to build this network by stacking simple operations is that it makes the math very simple.
+Simple enough that a Deep Learning Framework can manage it for you.
+The key mathematical insight is the &lt;strong&gt;chain rule&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/13.png&#34; style=&#34;margin: 0 auto; display: block; width:50%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;If you have two functions that get composed (one is applied to the output of the other),
+than the chain rule tells you that you can compute the derivatives of that function simply by taking the product of the derivatives of the components.
+Easier done than said, and very powerfull: as long as you know how to write the derivatives if your individual function,
+there is a simple way to combine them together and compute the derivative for the whole function.
+There is also a way a way to write this chain rule that is very efficient, with lots of data reuse.&lt;/p&gt;
+
+&lt;p&gt;Here is a full example:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/graphs/2.png&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;Our network is a stack of simple operations: linear transforms, RELUs, whatewer we want. Some have parameters, like the matrix tranform;
+some don&amp;rsquo;t, like the RELUs. When we apply our data to some input X, we have data flowing through the stack up to the prediction Y.
+To compute the derivatives, we create another graph where the data flows backward through the network, gets combined using the chain rule and produces gradients.
+That graph can be derived completely automatically from the individual operations in our stack,
+so most Deep Learning frameworks will just do it for you.&lt;/p&gt;
+
+&lt;p&gt;This is called &lt;strong&gt;back-propagation&lt;/strong&gt;, and it&amp;rsquo;s a very powerfull concept.
+It makes computing derivatives of comples functions very efficient, as long as the function is made up of simple blocks with simple derivatives.
+Running the model up to the predictions is called forward-propagation; the model that goes backwards is called back prop.&lt;/p&gt;
+
+&lt;h2 id=&#34;full-recap&#34;&gt;Full recap&lt;/h2&gt;
+
+&lt;p&gt;So, to recap, to run Stochastic Gradient Descent for every single batch of your data in your training set:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Run the forward prop&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/graphs/3.png&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Then, run the back prop&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/graphs/4.png&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;That will give you gradients for each of your weights in your model.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Apply those gradients with the learning rates to your original weights, and update them.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/14.png&#34; style=&#34;margin: 0 auto; display: block; width:50%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/formulas/15.png&#34; style=&#34;margin: 0 auto; display: block; width:50%&#34;&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Repeat that all over again many many times. This is how your entire model gets optimized.&lt;/p&gt;
+
+&lt;h1 id=&#34;going-deeper&#34;&gt;Going deeper&lt;/h1&gt;
+
+&lt;p&gt;So now you have a small Neural Network:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/graphs/5.png&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s not particularly deep, it has just two layers. You can make it bigger, more complex, by increasing the size of that hidden layer in the middle.
+Just increasing the number of RELUs unit is not particularly efficient; you need to make ot very big and then it gets really hard to train.&lt;/p&gt;
+
+&lt;p&gt;This is where the central idea of &lt;strong&gt;Deep Learning&lt;/strong&gt; comes in: you can add more layers, and make your model deeper.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://asolda.github.io/images/graphs/6.png&#34; style=&#34;margin: 0 auto; display: block; width:100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;There are lots of good reasons to do that:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Parameter efficiency: you can tipically get much more performance with fewer parameters, by going deeper rather than wider.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;A lot of natural phenomena have a hierarchical structure which deep models capture (see &lt;a href=&#34;https://asolda.github.io/post/convnet/&#34;&gt;this article&lt;/a&gt; for example).&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;wrapping-it-up&#34;&gt;Wrapping it up&lt;/h2&gt;
+
+&lt;p&gt;The next important topic is &lt;strong&gt;regularization&lt;/strong&gt;. Better regularization techniques are one of the main reason why we are so good at training deep models todey.&lt;/p&gt;
+
+&lt;p&gt;In the next (and hopefully last )part of the tutorial we will take a &lt;em&gt;deeper&lt;/em&gt; look at this topic.&lt;/p&gt;
+
+&lt;p&gt;In the meanwhile, you know enough to effectively use libraries such as &lt;a href=&#34;https://www.tensorflow.org/&#34;&gt;TensorFlow&lt;/a&gt;,
+to train theory into practice. I highly incourage you to have fun with the tutorials and experiment with your own models.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>An introduction to Deep Learning: part 2</title>
