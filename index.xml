@@ -6,8 +6,127 @@
     <description>Recent content on Yet another computer science blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 23 Jan 2017 11:52:15 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 26 Jan 2017 10:03:20 +0100</lastBuildDate>
     <atom:link href="https://asolda.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Deep Dream does things</title>
+      <link>https://asolda.github.io/post/deepdream-2/</link>
+      <pubDate>Thu, 26 Jan 2017 10:03:20 +0100</pubDate>
+      
+      <guid>https://asolda.github.io/post/deepdream-2/</guid>
+      <description>
+
+&lt;h1 id=&#34;the-importance-of-gpu&#34;&gt;The importance of GPU&lt;/h1&gt;
+
+&lt;p&gt;After my &lt;a href=&#34;https://asolda.github.io/post/deepdream/&#34;&gt;first article&lt;/a&gt; about Google&amp;rsquo;s &lt;a href=&#34;https://en.wikipedia.org/wiki/DeepDream&#34;&gt;Deep Dreams&lt;/a&gt;,
+I&amp;rsquo;ve kept trying new configurations and more photos, so I just wanted to share some of the results that I like the most.&lt;/p&gt;
+
+&lt;p&gt;An important note is that I&amp;rsquo;ve been using &lt;a href=&#34;http://www.nvidia.com/object/cuda_home_new.html&#34;&gt;cuda&lt;/a&gt;
+and a relatively powerful GPU (an &lt;a href=&#34;http://www.nvidia.it/content/PDF/data-sheet/DS_NV_Quadro_K4000_OCT13_NV_US_LR.pdf&#34;&gt;NVIDIA Quadro K4000&lt;/a&gt;),
+so generating these images for me was a matter of seconds.
+If you have a less powerful GPU, it may take more time to achieve meaningful results;
+if you are completely lacking a GPU, expect each iteration to take 3 to 10 minutes.&lt;/p&gt;
+
+&lt;h1 id=&#34;a-pretentious-gallery&#34;&gt;A pretentious gallery&lt;/h1&gt;
+
+&lt;h2 id=&#34;animals&#34;&gt;Animals&lt;/h2&gt;
+
+&lt;p&gt;I was curious to see the effect of my Deep Dream implementation on animals pictures.
+So, guess I&amp;rsquo;ll just share the pictures; here is the original one:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/1.jpg&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/1.jpg&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;And these are the results with different configurations:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/2.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/2.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/3.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/3.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;A personal favorite:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/4.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/4.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;More animals; original:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/5.jpg&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/5.jpg&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;and modified:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/6.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/6.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Original:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/7.jpg&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/7.jpg&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;and modified (this one is crazy):&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/8.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/8.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;paintings&#34;&gt;Paintings&lt;/h2&gt;
+
+&lt;p&gt;Some handpicked paintings that I like.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/The_Birth_of_Venus&#34;&gt;The birth of Venus&lt;/a&gt;, by Sandro Botticelli (already featured &lt;a href=&#34;https://asolda.github.io/post/deepdream/&#34;&gt;here&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Original:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/9.jpg&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/9.jpg&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Modified:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/10.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/10.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/11.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/11.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/12.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/12.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Two paintings from the &lt;a href=&#34;https://en.wikipedia.org/wiki/Sunflowers_(Van_Gogh_series)&#34;&gt;Sunflower series&lt;/a&gt; by Vincent Van Gogh.&lt;/p&gt;
+
+&lt;p&gt;Original:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/13.jpg&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/13.jpg&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Modified:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/14.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/14.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/15.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/15.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/16.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/16.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;And another one:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/17.jpg&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/17.jpg&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Modified:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/18.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/18.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/19.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/19.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/20.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/20.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;photos&#34;&gt;Photos&lt;/h2&gt;
+
+&lt;p&gt;This is a photo I took in Geneve, Switzerland:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/21.jpeg&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/21.jpeg&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Modified:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/22.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/22.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/23.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/23.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://asolda.github.io/images/gallery/24.png&#34;&gt;&lt;img src=&#34;https://asolda.github.io/images/gallery/24.png&#34; style=&#34;margin: 0 auto; display: block; width:75%&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The possibilities are infinite, the configurations allow for a great amount of customization and
+there is plenty of space for personalization.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve had a great amount of fun trying different settings, hopefully you can enjoy this process as well.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>An introduction to Deep Learning: part 3</title>
@@ -454,7 +573,7 @@ this is an important step to fully understand what is Deep Learning and, more im
       <guid>https://asolda.github.io/post/deepdream/</guid>
       <description>
 
-&lt;p&gt;This article is a follow up to &lt;a href=&#34;https://asolda.github.io/post/deepdream/&#34;&gt;this article&lt;/a&gt;; I suggest you check it out before moving on.&lt;/p&gt;
+&lt;p&gt;This article is a follow up to &lt;a href=&#34;https://asolda.github.io/post/convnet/&#34;&gt;this article&lt;/a&gt;; I suggest you check it out before moving on.&lt;/p&gt;
 
 &lt;h1 id=&#34;an-article-with-a-purpose&#34;&gt;An article with a purpose&lt;/h1&gt;
 
