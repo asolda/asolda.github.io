@@ -412,7 +412,7 @@ There are many ways to go about it, but &lt;strong&gt;lowering it over time&lt;/
 
 &lt;p&gt;It&amp;rsquo;s still a &lt;strong&gt;linear&lt;/strong&gt; model, but now we have all the tools that we need: time to go deeper!&lt;/p&gt;
 
-&lt;p&gt;In the next part we will introduce non linearity to our model and we will make it grow deeper and deeper. See you soon.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://asolda.github.io/post/deeplearning-3/&#34;&gt;next part&lt;/a&gt; we will introduce non linearity to our model and we will make it grow deeper and deeper. See you soon.&lt;/p&gt;
 </description>
     </item>
     
@@ -561,7 +561,7 @@ This works pretty well, but &lt;strong&gt;it can be very slow&lt;/strong&gt;, ev
 &lt;p&gt;In this article we have understood what are the mathematical foundations for Machine Learning;
 this is an important step to fully understand what is Deep Learning and, more importantly, what are the problems that you can solve with Deep Learning tecniques.&lt;/p&gt;
 
-&lt;p&gt;In the next part we will understand the differences between Machine and Deep learning and why these models are different.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://asolda.github.io/post/deeplearning-2/&#34;&gt;next part&lt;/a&gt; we will understand the differences between Machine and Deep learning and why these models are different.&lt;/p&gt;
 </description>
     </item>
     
